@@ -258,7 +258,7 @@ Abaixo está o passo a passo que cada pessoa deve seguir para implementar sua pa
 
 **Objetivo:** Criar e gerenciar o banco de dados SQLite, definindo todas as tabelas e dados iniciais.
 
-**Passo 1 — Entender o banco híbrido**
+**Passo 1 — Entender o banco híbrido** 
 - O projeto usa dois bancos dependendo do ambiente:
   - **Local:** `sql.js` (SQLite em memória + arquivo `data/database.sqlite`)
   - **Vercel:** `pg` (PostgreSQL via Neon, usando a variável `POSTGRES_URL` ou `DATABASE_URL`)

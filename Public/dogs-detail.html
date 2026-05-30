@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Login - Lar Canino">
+    <meta name="description" content="Thor - Cão para adoção - Lar Canino">
     <meta name="author" content="Lar Canino">
-    <title>Login | Lar Canino</title>
-    <link rel="stylesheet" href="css/style-login.css">
+    <title>Thor | Lar Canino</title>
+    <link rel="stylesheet" href="css/style-dog-detail.css">
 </head>
 <body>
 
@@ -18,9 +18,10 @@
             </a>
             <ul class="navbar-menu">
                 <li><a href="index.html" class="navbar-link">Início</a></li>
-                <li><a href="dogs.html" class="navbar-link">Cães</a></li>
+                <li><a href="dogs.html" class="navbar-link active">Cães</a></li>
                 <li><a href="#about" class="navbar-link">Sobre</a></li>
                 <li><a href="#contact" class="navbar-link">Contato</a></li>
+                <li><a href="login.html" class="btn btn-primary" style="padding: 8px 20px; margin-left: 10px;">Login</a></li>
             </ul>
         </div>
     </nav>
@@ -29,33 +30,48 @@
     <main>
         <section class="section">
             <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title text-center">Acessar minha conta</h2>
-                </div>
-                
-                <div class="form-container" style="max-width: 450px;">
-                    <form id="login-form">
-                        <div class="form-group">
-                            <label for="email">E-mail</label>
-                            <input type="email" id="email" name="email" placeholder="seu@email.com" required>
+                <!-- Breadcrumb -->
+                <nav style="margin-bottom: 2rem;">
+                    <a href="dogs.html" style="color: var(--text-color);">&larr; Voltar para lista de cães</a>
+                </nav>
+
+                <div class="dog-info-grid">
+                    <!-- Imagem do Cão -->
+                    <div class="dog-image">
+                        <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Thor" class="dog-info-img">
+                    </div>
+                    
+                    <!-- Informações do Cão -->
+                    <div class="dog-details">
+                        <h1>Thor</h1>
+                        <div class="dog-tags">
+                            <span class="tag">Macho</span>
+                            <span class="tag">2 anos</span>
+                            <span class="tag">Médio</span>
+                            <span class="tag">SRD</span>
                         </div>
-                        <div class="form-group">
-                            <label for="password">Senha</label>
-                            <input type="password" id="password" name="password" placeholder="••••••••" required>
+                        
+                        <div class="card-text mt-3">
+                            <p><strong>Descrição:</strong></p>
+                            <p>Thor é um cãozinho muito amoroso e brincalhão. Adora crianças e outros cães. É super educado e sabe comandos básicos como "senta", "deita" e "vem".</p>
+                            
+                            <p style="margin-top: 1rem;"><strong>Saúde:</strong></p>
+                            <ul style="margin-left: 1.5rem; color: var(--text-color);">
+                                <li>Vacinado</li>
+                                <li>Vermifugado</li>
+                                <li>Castrado</li>
+                                <li>Microchipgado</li>
+                            </ul>
+                            
+                            <p style="margin-top: 1rem;"><strong>Personalidade:</strong></p>
+                            <p>Extremamente dócil, ama colo e brincadeiras. Ótimo para apartamentos.</p>
                         </div>
-                        <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
-                            <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
-                                <input type="checkbox" name="remember"> Lembrar-me
-                            </label>
-                            <a href="#" style="color: var(--primary-color); font-size: 0.9rem;">Esqueci minha senha</a>
+
+                        <div style="margin-top: 2rem;">
+                            <a href="my-adoption.html" class="btn btn-primary" style="width: 100%;">Quero adotar o Thor!</a>
+                            <a href="dogs.html" class="btn btn-outline mt-2" style="display: block; text-align: center;">Ver outros cães</a>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">
-                            Entrar
-                        </button>
-                        <p class="text-center mt-2">
-                            Não tem uma conta? <a href="register.html" style="color: var(--primary-color); font-weight: 600;">Cadastre-se</a>
-                        </p>
-                    </form>
+                    </div>
                 </div>
             </div>
         </section>

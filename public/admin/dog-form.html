@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastrar Cão - Admin</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav id="navbar" class="navbar"></nav>
+  <div id="alert-container"></div>
+
+  <main class="container-small">
+    <div class="form-container">
+      <h2 id="form-title" class="text-center mb-20">Cadastrar Novo Cão</h2>
+
+      <form id="dog-form">
+        <div class="form-group">
+          <label for="name">Nome:</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="age">Idade:</label>
+          <input type="text" id="age" name="age" placeholder="Ex: 2 anos" required>
+        </div>
+
+        <div class="form-group">
+          <label for="vaccines">Vacinas:</label>
+          <textarea id="vaccines" name="vaccines" placeholder="Lista de vacinas tomadas"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="condition">Condição / Doenças:</label>
+          <input type="text" id="condition" name="condition" placeholder="Ex: Saudável, Deficiente visual, etc.">
+        </div>
+
+        <div class="form-group">
+          <label for="description">Descrição:</label>
+          <textarea id="description" name="description" placeholder="Conte um pouco sobre o cão..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="photo">Foto:</label>
+          <input type="file" id="photo" name="photo" accept="image/*">
+          <img id="photo-preview" class="img-preview" style="display:none">
+        </div>
+
+        <!-- Campo de disponibilidade (só aparece ao editar) -->
+        <div class="form-group" id="available-group" style="display:none">
+          <label for="available">Disponível para adoção:</label>
+          <select id="available" name="available">
+            <option value="1">Sim</option>
+            <option value="0">Não</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%">Salvar</button>
+        <a href="/admin/dogs.html" class="btn btn-secondary mt-10" style="width:100%;display:block;text-align:center">Cancelar</a>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Abrigo Patinhas Felizes</p>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

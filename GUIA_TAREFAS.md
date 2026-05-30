@@ -1,6 +1,6 @@
 # 🐾 GUIA DE TAREFAS — Sistema de Adoção de Cães
 
-## Divisão para 10 Pessoas
+## Divisão para 11 Pessoas
 
 ---
 
@@ -95,7 +95,8 @@ registration-system/
 | **P2** | Banco de Dados                | `database.js`                         | ⭐⭐⭐      |
 | **P3** | Middleware Auth                | `middleware/auth.js`                  | ⭐          |
 | **P4** | API Login/Cadastro            | `routes/auth.js`                      | ⭐⭐        |
-| **P5** | API Cães + Local              | `routes/dogs.js`, `routes/place.js`   | ⭐⭐        |
+| **P5** | API Cães                      | `routes/dogs.js`                      | ⭐⭐        |
+| **P11**| API Local                     | `routes/place.js`                     | ⭐⭐        |
 | **P6** | API Admin (CRUD)              | `routes/admin.js` (cães)              | ⭐⭐⭐      |
 | **P7** | API Admin (clientes/adoções)  | `routes/admin.js` (clientes+adoções+local) | ⭐⭐⭐ |
 | **P8** | CSS + Layout + Home           | `style.css`, `index.html`             | ⭐⭐        |
@@ -384,11 +385,9 @@ Abaixo está o passo a passo que cada pessoa deve seguir para implementar sua pa
 
 ---
 
-### 👤 P5 — API de Cães + Local (`routes/dogs.js`, `routes/place.js`)
+### 👤 P5 — API de Cães (`routes/dogs.js`)
 
-**Objetivo:** Criar as rotas públicas de listagem de cães, detalhes, adoção e informações do local.
-
-#### Arquivo `routes/dogs.js`
+**Objetivo:** Criar as rotas públicas de listagem de cães, detalhes, adoção e cancelamento.
 
 **Passo 1 — Rota GET `/` (lista de cães disponíveis)**
 - Consulte todos os cães onde `available = 1`, ordenados por data de criação (mais recente primeiro)
@@ -418,14 +417,24 @@ Abaixo está o passo a passo que cada pessoa deve seguir para implementar sua pa
 - Se a adoção já estava aprovada, volte o cão para disponível (`available = 1`)
 - Delete a adoção do banco
 
-#### Arquivo `routes/place.js`
+**Dicas de pesquisa:** "Express route order matters", "SQL JOIN two tables", "req.params vs req.body"
 
-**Passo 6 — Rota GET `/` (informações do local)**
+---
+
+### 👤 P11 — API do Local (`routes/place.js`)
+
+**Objetivo:** Criar a rota pública que retorna as informações e fotos do local de adoção.
+
+**Passo 1 — Estruturar o arquivo de rotas**
+- Importe `express`, crie um `Router()` e exporte-o no final
+- Importe `getDb` do `database.js`
+
+**Passo 2 — Rota GET `/` (informações do local)**
 - Busque os dados de `place_info` (LIMIT 1) e todas as fotos de `place_photos`
 - Retorne ambos como JSON: `{ place, photos }`
-- Esta rota é pública
+- Esta rota é **pública** (não precisa de autenticação)
 
-**Dicas de pesquisa:** "Express route order matters", "SQL JOIN two tables", "req.params vs req.body"
+**Dicas de pesquisa:** "Express Router", "SQL SELECT LIMIT 1", "res.json node express"
 
 ---
 

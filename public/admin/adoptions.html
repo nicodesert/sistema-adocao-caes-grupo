@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adoções - Admin</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav id="navbar" class="navbar"></nav>
+  <div id="alert-container"></div>
+
+  <main class="container">
+    <h1 class="mb-20">📝 Solicitações de Adoção</h1>
+
+    <nav class="admin-nav">
+      <a href="/admin/index.html">Dashboard</a>
+      <a href="/admin/dogs.html">Cães</a>
+      <a href="/admin/clients.html">Clientes</a>
+      <a href="/admin/adoptions.html" class="active">Adoções</a>
+      <a href="/admin/place.html">Local</a>
+    </nav>
+
+    <!-- Filtros -->
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all" onclick="filterAdoptions('all')">Todas</button>
+      <button class="filter-btn" data-filter="pending" onclick="filterAdoptions('pending')">Pendentes</button>
+      <button class="filter-btn" data-filter="approved" onclick="filterAdoptions('approved')">Aprovadas</button>
+      <button class="filter-btn" data-filter="rejected" onclick="filterAdoptions('rejected')">Rejeitadas</button>
+    </div>
+
+    <div id="admin-adoptions" class="table-container">
+      <p class="text-center" style="padding:20px">Carregando...</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Abrigo Patinhas Felizes</p>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

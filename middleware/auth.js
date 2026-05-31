@@ -15,10 +15,13 @@ function isAuthenticated(req, res, next) {
 
 // Verifica se é administrador
 function isAdmin(req, res, next) {
-  if (req.session && req.session.user && req.session.user.role === 'admin') {
-    return next(); // é admin, pode continuar
+  if (!req.session || !req.session.user) {
+    return res.status(401).json({ error: 'Faça login para continuar.' });
   }
-  res.status(403).json({ error: 'Acesso negado.' });
+  if (req.session.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Acesso negado.' });
+  }
+  next();
 }
 
 module.exports = { isAuthenticated, isAdmin };

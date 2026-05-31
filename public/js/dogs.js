@@ -29,14 +29,25 @@ async function loadDogDetail() {
     const id = params.get('id');
     const dog = await apiCall(`/api/dogs/${id}`);
     container.innerHTML = `
-        <div class="card">
-            <img class="card-img" src="${dog.photo}">
-            <div class="card-content">
-                <h2>${dog.name}</h2>
-                <p>${dog.description}</p>
-                <button class="btn btn-success" onclick="requestAdopt(${dog.id})">
-                    Quero Adotar
-                </button>
+        <div class="dog-info-grid">
+            <div class="dog-image">
+                <img src="${dog.photo}" alt="${dog.name}" class="dog-info-img">
+            </div>
+            <div class="dog-details">
+                <h1>${dog.name}</h1>
+                <div class="dog-tags">
+                    ${dog.age ? `<span class="tag">🎂 ${dog.age}</span>` : ''}
+                    ${dog.condition ? `<span class="tag">❤️ ${dog.condition}</span>` : ''}
+                </div>
+                <div class="card-text mt-3">
+                    <p><strong>Descrição:</strong></p>
+                    <p>${dog.description || 'Sem descrição disponível.'}</p>
+                </div>
+                <div style="margin-top: 2rem;">
+                    <button class="btn btn-primary" onclick="requestAdopt(${dog.id})">
+                        🐾 Quero Adotar
+                    </button>
+                </div>
             </div>
         </div>
     `;
@@ -56,12 +67,41 @@ async function loadMyAdoptions() {
     const container = document.getElementById('my-adoptions');
     if (!container) return;
     const adoptions = await apiCall('/api/dogs/my-adoptions');
-    container.innerHTML = adoptions.map(a => `
-        <div class="card">
-            <div class="card-content">
-                <h3>${a.name}</h3>
-                <span class="badge badge-${a.status}">${a.status}</span>
-            </div>
-        </div>
-    `).join('');
+    if (!adoptions.length) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">🐾</div>
+                <h3>Nenhuma adoção ainda</h3>
+                <p>Você ainda não solicitou nenhuma adoção.</p>
+            </div>`;
+        return;
+    }
+    const statusLabels = { approved: 'Aprovada', pending: 'Pendente', rejected: 'Recusada' };
+    container.innerHTML = `
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Foto</th>
+                        <th>Nome</th>
+                        <th>Idade</th>
+                        <th>Data</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${adoptions.map(a => `
+                        <tr>
+                            <td><img src="${a.photo}" alt="${a.name}"></td>
+                            <td>${a.name}</td>
+                            <td>${a.age || '-'}</td>
+                            <td>${new Date(a.adoption_date).toLocaleDateString('pt-BR')}</td>
+                            <td><span class="status-${a.status}">${statusLabels[a.status] || a.status}</span></td>
+                            <td>${a.status !== 'approved' ? `<button class="btn btn-outline" onclick="cancelAdoption(${a.adoption_id})">Cancelar</button>` : ''}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>`;
 }

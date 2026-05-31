@@ -6,12 +6,12 @@ window.appReady.then(() => {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             try {
-                await apiCall('/api/auth/login', {
+                const loginData = await apiCall('/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
-                location.href = '/index.html';
+                location.href = loginData.user && loginData.user.role === 'admin' ? '/admin/index.html' : '/index.html';
             } catch (err) {
                 showAlert(err.message, 'error');
             }

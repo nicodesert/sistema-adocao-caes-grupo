@@ -26,23 +26,36 @@ function buildNavbar() {
         <div class="container">
             <a href="/index.html" class="navbar-logo">🐾 PETMEL ADOÇÕES</a>
             <ul class="navbar-menu">
-                <li><a href="/dogs.html" class="navbar-link">Cães</a></li>
-                <li><a href="/place.html" class="navbar-link">Acolhedor</a></li>
+                <li><a href="/index.html" class="navbar-link">Início</a></li>
+                <li><a href="/dogs.html" class="navbar-link">Cães Disponíveis</a></li>
+                <li><a href="/place.html" class="navbar-link">Local</a></li>
                 <li><a href="/login.html" class="navbar-link">Login</a></li>
                 <li><a href="/register.html" class="btn btn-primary">Cadastro</a></li>
             </ul>
         </div>`;
+    } else if (window.currentUser.role === 'admin') {
+        navbar.innerHTML = `
+        <div class="container">
+            <a href="/admin/index.html" class="navbar-logo">🐾 PETMEL ADOÇÕES</a>
+            <ul class="navbar-menu">
+                <li><a href="/admin/index.html" class="navbar-link">Dashboard</a></li>
+                <li><a href="/admin/dogs.html" class="navbar-link">Cães</a></li>
+                <li><a href="/admin/clients.html" class="navbar-link">Clientes</a></li>
+                <li><a href="/admin/adoptions.html" class="navbar-link">Adoções</a></li>
+                <li><a href="/place.html" class="navbar-link">Local</a></li>
+                <li><a href="#" class="navbar-link">${window.currentUser.name}</a></li>
+                <li><a href="#" class="navbar-link" onclick="logout()">Sair</a></li>
+            </ul>
+        </div>`;
     } else {
-        const adminLink = window.currentUser.role === 'admin'
-            ? `<li><a href="/admin/index.html" class="navbar-link">Admin</a></li>` : '';
         navbar.innerHTML = `
         <div class="container">
             <a href="/index.html" class="navbar-logo">🐾 PETMEL ADOÇÕES</a>
             <ul class="navbar-menu">
-                <li><a href="/dogs.html" class="navbar-link">Cães</a></li>
+                <li><a href="/index.html" class="navbar-link">Início</a></li>
+                <li><a href="/dogs.html" class="navbar-link">Cães Disponíveis</a></li>
                 <li><a href="/my-adoptions.html" class="navbar-link">Minhas Adoções</a></li>
                 <li><a href="/place.html" class="navbar-link">Local</a></li>
-                ${adminLink}
                 <li><a href="#" class="navbar-link">${window.currentUser.name}</a></li>
                 <li><a href="#" class="navbar-link" onclick="logout()">Sair</a></li>
             </ul>

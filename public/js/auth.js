@@ -1,4 +1,23 @@
+function formatCPF(value) {
+    return value.replace(/\D/g, '').slice(0, 11)
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+}
+
+function formatPhone(value) {
+    return value.replace(/\D/g, '').slice(0, 11)
+        .replace(/(\d{2})(\d)/, '($1) $2')
+        .replace(/(\d{4,5})(\d{4})$/, '$1-$2');
+}
+
 window.appReady.then(() => {
+    const cpfInput = document.getElementById('cpf');
+    if (cpfInput) cpfInput.addEventListener('input', e => { e.target.value = formatCPF(e.target.value); });
+
+    const phoneInput = document.getElementById('phone');
+    if (phoneInput) phoneInput.addEventListener('input', e => { e.target.value = formatPhone(e.target.value); });
+
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {

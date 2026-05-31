@@ -33,12 +33,15 @@ function buildNavbar() {
             </ul>
         </div>`;
     } else {
+        const adminLink = window.currentUser.role === 'admin'
+            ? `<li><a href="/admin/index.html" class="navbar-link">Admin</a></li>` : '';
         navbar.innerHTML = `
         <div class="container">
             <a href="/index.html" class="navbar-logo">🐾 Lar Canino</a>
             <ul class="navbar-menu">
                 <li><a href="/dogs.html" class="navbar-link">Cães</a></li>
                 <li><a href="/my-adoptions.html" class="navbar-link">Minhas Adoções</a></li>
+                ${adminLink}
                 <li><a href="#" class="navbar-link">${window.currentUser.name}</a></li>
                 <li><a href="#" class="navbar-link" onclick="logout()">Sair</a></li>
             </ul>

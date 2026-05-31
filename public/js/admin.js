@@ -105,15 +105,42 @@ async function deleteDog(id) {
 // =============================================
 async function initDogForm() {
   const form = document.getElementById('dog-form');
+  const submitBtn = form.querySelector('button[type="submit"]');
   const params = new URLSearchParams(window.location.search);
   const dogId = params.get('id');
 
   setupImagePreview('photo', 'photo-preview');
 
+  // Registra o listener de submit ANTES do carregamento assíncrono
+  // para evitar que cliques rápidos sejam ignorados
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const url = dogId ? '/api/admin/dogs/' + dogId : '/api/admin/dogs';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Salvando...';
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      showAlert(data.message, 'success');
+      setTimeout(() => { window.location.href = '/admin/dogs.html'; }, 1000);
+    } catch (err) {
+      showAlert(err.message || 'Erro ao salvar.', 'error');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Salvar';
+    }
+  });
+
   // Se tem ID na URL, é edição — carrega dados do cão
   if (dogId) {
     document.getElementById('form-title').textContent = 'Editar Cão';
     document.getElementById('available-group').style.display = 'block';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Carregando...';
 
     try {
       const dog = await apiCall('/api/admin/dogs/' + dogId);
@@ -130,36 +157,12 @@ async function initDogForm() {
         preview.style.display = 'block';
       }
     } catch (err) {
-      showAlert('Erro ao carregar cão.', 'error');
-      return;
+      showAlert('Erro ao carregar dados do cão.', 'error');
     }
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Salvar';
   }
-
-  // Submissão do formulário
-  form.addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    // Usa FormData para enviar arquivo junto com os campos
-    const formData = new FormData(form);
-
-    const url = dogId ? '/api/admin/dogs/' + dogId : '/api/admin/dogs';
-
-    try {
-      const res = await fetch(url, {
-        method: 'POST',
-        body: formData // NÃO definir Content-Type — o browser faz sozinho com o boundary
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-
-      showAlert(data.message, 'success');
-      setTimeout(() => {
-        window.location.href = '/admin/dogs.html';
-      }, 1000);
-    } catch (err) {
-      showAlert(err.message, 'error');
-    }
-  });
 }
 
 // =============================================

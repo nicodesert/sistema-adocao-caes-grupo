@@ -9,16 +9,19 @@ async function loadDogs() {
     if (!container) return;
     const dogs = await apiCall('/api/dogs');
     container.innerHTML = dogs.map(dog => `
-        <div class="card">
-            <img class="card-img" src="${dog.photo}">
+        <article class="card">
+            <img class="card-img" src="${dog.photo}" alt="${dog.name}">
             <div class="card-content">
-                <h3>${dog.name}</h3>
-                <p>${dog.age}</p>
-                <a class="btn btn-primary" href="/dog-detail.html?id=${dog.id}">
+                <h3 class="card-title">${dog.name}</h3>
+                <p class="card-text">
+                    ${dog.age ? `<strong>Idade:</strong> ${dog.age}<br>` : ''}
+                    ${dog.condition ? `<strong>Condição:</strong> ${dog.condition}` : ''}
+                </p>
+                <a class="btn btn-primary mt-2" href="/dog-detail.html?id=${dog.id}">
                     Ver detalhes
                 </a>
             </div>
-        </div>
+        </article>
     `).join('');
 }
 

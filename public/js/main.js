@@ -1,4 +1,4 @@
-window.currentUser = null;
+﻿window.currentUser = null;
 
 async function apiCall(url, options = {}) {
     const response = await fetch(url, options);
@@ -24,7 +24,7 @@ function buildNavbar() {
     if (!window.currentUser) {
         navbar.innerHTML = `
         <div class="container">
-            <a href="/index.html" class="navbar-logo">🐾 Lar Canino</a>
+            <a href="/index.html" class="navbar-logo">🐾 PETMEL ADOÇÕES</a>
             <ul class="navbar-menu">
                 <li><a href="/dogs.html" class="navbar-link">Cães</a></li>
                 <li><a href="/place.html" class="navbar-link">Acolhedor</a></li>
@@ -37,7 +37,7 @@ function buildNavbar() {
             ? `<li><a href="/admin/index.html" class="navbar-link">Admin</a></li>` : '';
         navbar.innerHTML = `
         <div class="container">
-            <a href="/index.html" class="navbar-logo">🐾 Lar Canino</a>
+            <a href="/index.html" class="navbar-logo">🐾 PETMEL ADOÇÕES</a>
             <ul class="navbar-menu">
                 <li><a href="/dogs.html" class="navbar-link">Cães</a></li>
                 <li><a href="/my-adoptions.html" class="navbar-link">Minhas Adoções</a></li>

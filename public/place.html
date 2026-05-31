@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Seja um acolhedor - PETMEL ADOÇÕES">
-    <meta name="keywords" content="acolher cão, lar temporário, PETMEL ADOÇÕES">
+    <meta name="description" content="Local - PETMEL ADOÇÕES">
+    <meta name="keywords" content="local, endereço, contato, PETMEL ADOÇÕES">
     <meta name="author" content="PETMEL ADOÇÕES">
-    <title>Ser Acolhedor | PETMEL ADOÇÕES</title>
+    <title>Local | PETMEL ADOÇÕES</title>
     <link rel="stylesheet" href="css/style-place.css">
 </head>
 <body>
@@ -15,95 +15,31 @@
     <!-- Navbar -->
     <nav id="navbar" class="navbar"></nav>
 
-    <!-- Hero Section -->
-    <header class="hero" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
-        <div class="container hero-content">
-            <h1>Seja um Acolhedor 🏠</h1>
-            <p>
-                Abrigue um cão temporariamente em sua casa e ajude 
-                a salvar vidas enquanto ele espera por uma família definitiva.
-            </p>
-            <div class="mt-4">
-                <a href="#register-host" class="btn btn-secondary">
-                    Quero ser acolhedor
-                </a>
-            </div>
-        </div>
-    </header>
-
     <!-- Main Content -->
     <main>
-        <!-- Como Funciona -->
+        <!-- Informações do Local -->
         <section class="section">
             <div class="container">
-                <h2 class="section-title text-center">Como funciona?</h2>
-                <div class="cards-grid" style="margin-top: 2rem;">
-                    <article class="card">
-                        <div class="card-content text-center">
-                            <h3 class="card-title">1️⃣ Cadastre-se</h3>
-                            <p class="card-text mt-2">
-                                Preencha o formulário abaixo com seus dados e informações sobre sua residência.
-                            </p>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <div class="card-content text-center">
-                            <h3 class="card-title">2️⃣ Avaliação</h3>
-                            <p class="card-text mt-2">
-                                Nossa equipe entrará em contato para conhecer melhor você e sua família.
-                            </p>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <div class="card-content text-center">
-                            <h3 class="card-title">3️⃣ Match</h3>
-                            <p class="card-text mt-2">
-                                Receba um cãozinho compatível com seu perfil e sua nova jornada.
-                            </p>
-                        </div>
-                    </article>
+                <div id="place-info">
+                    <p class="text-center">Carregando informações...</p>
                 </div>
             </div>
         </section>
 
-        <!-- Benefícios -->
-        <section class="section" style="background-color: var(--white);">
+        <!-- Galeria de Fotos -->
+        <section class="section" style="background-color: var(--white);" id="gallery-section" style="display:none">
             <div class="container">
-                <h2 class="section-title text-center">Benefícios de ser acolhedor</h2>
-                <div class="cards-grid" style="margin-top: 2rem;">
-                    <article class="card">
-                        <div class="card-content">
-                            <h3>🐶 Ajudar a salvar vidas</h3>
-                            <p class="card-text mt-2">
-                                Cada acolhedor temporário aumenta as chances de um cão encontrar um lar definitivo.
-                            </p>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <div class="card-content">
-                            <h3>💰 Custos cobertos</h3>
-                            <p class="card-text mt-2">
-                                Nós Arcamos com as despesas de alimentação, veterinário e medicamentos.
-                            </p>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <div class="card-content">
-                            <h3>❤️ Experiência gratificante</h3>
-                            <p class="card-text mt-2">
-                                Receba amor incondicional e a satisfação de fazer a diferença na vida de um animal.
-                            </p>
-                        </div>
-                    </article>
-                </div>
+                <h2 class="section-title text-center">Galeria de Fotos</h2>
+                <div id="place-gallery" class="cards-grid" style="margin-top: 2rem;"></div>
             </div>
         </section>
 
-        <!-- Formulário de Cadastro -->
+        <!-- Seja um Acolhedor -->
         <section class="section" id="register-host">
             <div class="container">
                 <div class="section-header">
                     <h2 class="section-title text-center">Quer ser acolhedor? Cadastre-se!</h2>
+                    <p class="text-center">Abrigue um cão temporariamente em sua casa e ajude a salvar vidas.</p>
                 </div>
                 
                 <div class="form-container">
@@ -167,24 +103,13 @@
                     <ul class="footer-links">
                         <li><a href="index.html">Início</a></li>
                         <li><a href="dogs.html">Cães disponíveis</a></li>
-                        <li><a href="#about">Sobre nós</a></li>
-                        <li><a href="#contact">Contato</a></li>
+                        <li><a href="place.html">Local</a></li>
                     </ul>
                 </div>
-                <div class="footer-section">
+                <div class="footer-section" id="footer-contact">
                     <h4>Contato</h4>
-                    <ul class="footer-links">
-                        <li>📧 contato@larcanino.com.br</li>
-                        <li>📱 (00) 00000-0000</li>
-                        <li>📍 Rua exemplo, 123 - Cidade/UF</li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Redes sociais</h4>
-                    <ul class="footer-links">
-                        <li><a href="#" target="_blank">📘 Facebook</a></li>
-                        <li><a href="#" target="_blank">📸 Instagram</a></li>
-                        <li><a href="#" target="_blank">🐦 Twitter</a></li>
+                    <ul class="footer-links" id="footer-contact-list">
+                        <li>📧 contato@petmel.com.br</li>
                     </ul>
                 </div>
             </div>

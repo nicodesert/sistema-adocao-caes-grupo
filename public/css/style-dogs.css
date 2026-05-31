@@ -1,12 +1,12 @@
-/* ============================================
+﻿/* ============================================
    CSS Reset & Variáveis
    ============================================ */
 :root {
     /* Cores principais */
-    --primary: #e67e22;
-    --primary-dark: #d35400;
-    --primary-light: #fdf2e9;
-    --secondary: #2c3e50;
+    --primary: #1d4ed8;
+    --primary-dark: #1e3a8a;
+    --primary-light: #eff6ff;
+    --secondary: #0f2460;
     
     /* Cores neutras */
     --white: #ffffff;

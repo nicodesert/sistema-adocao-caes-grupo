@@ -1,12 +1,12 @@
-/* ============================================
+﻿/* ============================================
    CSS Reset & Variáveis
    ============================================ */
 :root {
     /* Cores principais */
-    --primary: #e67e22;
-    --primary-dark: #d35400;
-    --primary-light: #fdf2e9;
-    --secondary: #2c3e50;
+    --primary: #1d4ed8;
+    --primary-dark: #1e3a8a;
+    --primary-light: #eff6ff;
+    --secondary: #0f2460;
     
     /* Cores neutras */
     --white: #ffffff;
@@ -664,7 +664,7 @@ footer .container {
 
 @keyframes pulse {
     0% {
-        box-shadow: 0 0 0 0 rgba(230, 126, 34, 0.4);
+        box-shadow: 0 0 0 0 rgba(29, 78, 216, 0.4);
     }
     70% {
         box-shadow: 0 0 0 10px rgba(230, 126, 34, 0);

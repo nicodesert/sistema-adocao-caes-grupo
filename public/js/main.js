@@ -41,6 +41,7 @@ function buildNavbar() {
             <ul class="navbar-menu">
                 <li><a href="/dogs.html" class="navbar-link">Cães</a></li>
                 <li><a href="/my-adoptions.html" class="navbar-link">Minhas Adoções</a></li>
+                <li><a href="/place.html" class="navbar-link">Local</a></li>
                 ${adminLink}
                 <li><a href="#" class="navbar-link">${window.currentUser.name}</a></li>
                 <li><a href="#" class="navbar-link" onclick="logout()">Sair</a></li>

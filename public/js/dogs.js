@@ -30,11 +30,25 @@ async function loadDogDetail() {
     if (!container) return;
     const params = new URLSearchParams(location.search);
     const id = params.get('id');
-    const dog = await apiCall(`/api/dogs/${id}`);
+    let dog;
+    try {
+        dog = await apiCall(`/api/dogs/${id}`);
+    } catch (err) {
+        container.innerHTML = `<p class="text-center">Cão não encontrado.</p>`;
+        return;
+    }
+    let actionHtml;
+    if (!dog.available) {
+        actionHtml = `<span class="badge badge-unavailable">Já adotado 🏠</span>`;
+    } else if (!window.currentUser) {
+        actionHtml = `<a class="btn btn-outline" href="/login.html">Faça login para adotar</a>`;
+    } else {
+        actionHtml = `<button class="btn btn-primary" onclick="requestAdopt(${dog.id})">🐾 Quero Adotar</button>`;
+    }
     container.innerHTML = `
         <div class="dog-info-grid">
             <div class="dog-image">
-                <img src="${dog.photo}" alt="${dog.name}" class="dog-info-img">
+                <img src="${dog.photo || ''}" alt="${dog.name}" class="dog-info-img">
             </div>
             <div class="dog-details">
                 <h1>${dog.name}</h1>
@@ -47,9 +61,7 @@ async function loadDogDetail() {
                     <p>${dog.description || 'Sem descrição disponível.'}</p>
                 </div>
                 <div style="margin-top: 2rem;">
-                    <button class="btn btn-primary" onclick="requestAdopt(${dog.id})">
-                        🐾 Quero Adotar
-                    </button>
+                    ${actionHtml}
                 </div>
             </div>
         </div>
@@ -69,7 +81,18 @@ async function requestAdopt(id) {
 async function loadMyAdoptions() {
     const container = document.getElementById('my-adoptions');
     if (!container) return;
-    const adoptions = await apiCall('/api/dogs/my-adoptions');
+    if (!window.currentUser) {
+        location.href = '/login.html';
+        return;
+    }
+    let adoptions;
+    try {
+        adoptions = await apiCall('/api/dogs/my-adoptions');
+    } catch (err) {
+        if (err.message && err.message.includes('401')) location.href = '/login.html';
+        else container.innerHTML = `<p class="text-center">Erro ao carregar adoções.</p>`;
+        return;
+    }
     if (!adoptions.length) {
         container.innerHTML = `
             <div class="empty-state">
@@ -107,4 +130,15 @@ async function loadMyAdoptions() {
                 </tbody>
             </table>
         </div>`;
+}
+
+async function cancelAdoption(adoptionId) {
+    if (!confirm('Tem certeza que deseja cancelar esta solicitação de adoção?')) return;
+    try {
+        await apiCall(`/api/dogs/cancel-adoption/${adoptionId}`, { method: 'POST' });
+        showAlert('Adoção cancelada com sucesso.');
+        await loadMyAdoptions();
+    } catch (err) {
+        showAlert(err.message || 'Erro ao cancelar adoção.', 'error');
+    }
 }

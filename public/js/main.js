@@ -86,6 +86,22 @@ async function loadFeaturedDogs() {
     }
 }
 
+function setupImagePreview(inputId, previewId) {
+    const input = document.getElementById(inputId);
+    const preview = document.getElementById(previewId);
+    if (!input || !preview) return;
+    input.addEventListener('change', () => {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
 window.appReady = (async () => {
     await loadUser();
     buildNavbar();

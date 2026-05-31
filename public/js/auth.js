@@ -28,7 +28,8 @@ window.appReady.then(() => {
                 phone: document.getElementById('phone').value,
                 cpf: document.getElementById('cpf').value,
                 address: document.getElementById('address').value,
-                password: document.getElementById('password').value
+                password: document.getElementById('password').value,
+                confirmPassword: document.getElementById('confirm-password').value
             };
             try {
                 await apiCall('/api/auth/register', {

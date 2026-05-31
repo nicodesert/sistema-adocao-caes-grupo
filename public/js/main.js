@@ -23,26 +23,26 @@ function buildNavbar() {
     if (!navbar) return;
     if (!window.currentUser) {
         navbar.innerHTML = `
-        <nav class="navbar">
-            <a href="/index.html">Início</a>
-            <ul class="navbar-links">
-                <li><a href="/dogs.html">Cães</a></li>
-                <li><a href="/place.html">Local</a></li>
-                <li><a href="/login.html">Login</a></li>
-                <li><a href="/register.html">Cadastro</a></li>
+        <div class="container">
+            <a href="/index.html" class="navbar-logo">🐾 Lar Canino</a>
+            <ul class="navbar-menu">
+                <li><a href="/dogs.html" class="navbar-link">Cães</a></li>
+                <li><a href="/place.html" class="navbar-link">Acolhedor</a></li>
+                <li><a href="/login.html" class="navbar-link">Login</a></li>
+                <li><a href="/register.html" class="btn btn-primary">Cadastro</a></li>
             </ul>
-        </nav>`;
+        </div>`;
     } else {
         navbar.innerHTML = `
-        <nav class="navbar">
-            <a href="/index.html">Abrigo</a>
-            <ul class="navbar-links">
-                <li><a href="/dogs.html">Cães</a></li>
-                <li><a href="/my-adoptions.html">Minhas Adoções</a></li>
-                <li><a href="#">${window.currentUser.name}</a></li>
-                <li><a href="#" onclick="logout()">Sair</a></li>
+        <div class="container">
+            <a href="/index.html" class="navbar-logo">🐾 Lar Canino</a>
+            <ul class="navbar-menu">
+                <li><a href="/dogs.html" class="navbar-link">Cães</a></li>
+                <li><a href="/my-adoptions.html" class="navbar-link">Minhas Adoções</a></li>
+                <li><a href="#" class="navbar-link">${window.currentUser.name}</a></li>
+                <li><a href="#" class="navbar-link" onclick="logout()">Sair</a></li>
             </ul>
-        </nav>`;
+        </div>`;
     }
 }
 
@@ -68,10 +68,10 @@ async function loadFeaturedDogs() {
         const dogs = await apiCall('/api/dogs');
         container.innerHTML = dogs.slice(0, 6).map(dog => `
             <div class="card">
-                <img class="card-img" src="${dog.photo || '/img/no-image.png'}">
+                <img class="card-image" src="${dog.photo || '/img/no-image.png'}" alt="${dog.name}">
                 <div class="card-content">
-                    <h3>${dog.name}</h3>
-                    <p>${dog.age}</p>
+                    <h3 class="card-title">${dog.name}</h3>
+                    <p class="card-text">${dog.age || ''}</p>
                     <a class="btn btn-primary" href="/dog-detail.html?id=${dog.id}">
                         Ver detalhes
                     </a>

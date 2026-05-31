@@ -188,7 +188,17 @@ async function initializePostgresDatabase() {
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )`);
 
-  const adminExists = await db.prepare('SELECT id FROM users WHERE role = ?').get('admin');
+  await db.exec(`CREATE TABLE IF NOT EXISTS hosts (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    address TEXT NOT NULL,
+    housing TEXT,
+    has_yard TEXT,
+    experience TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )`);
   if (!adminExists) {
     const hash = bcrypt.hashSync('admin123', 10);
     await db.prepare('INSERT INTO users (name,email,phone,cpf,address,password,role) VALUES (?,?,?,?,?,?,?)')
@@ -272,7 +282,18 @@ async function initializeDatabase() {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
-  // Cria admin padrão (senha criptografada)
+  // Tabela de acolhedores
+  await db.exec(`CREATE TABLE IF NOT EXISTS hosts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    address TEXT NOT NULL,
+    housing TEXT,
+    has_yard TEXT,
+    experience TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )`);
   const adminExists = await db.prepare('SELECT id FROM users WHERE role = ?').get('admin');
   if (!adminExists) {
     const hash = bcrypt.hashSync('admin123', 10);

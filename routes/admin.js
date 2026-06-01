@@ -200,7 +200,13 @@ router.post('/place', async (req, res) => {
 // POST /api/admin/place/photo — adicionar foto do local
 router.post('/place/photo', uploadPlace.single('photo'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'Selecione uma foto.' });
-  const photo = await saveUploadedFile(req.file, 'place');
+  let photo;
+  try {
+    photo = await saveUploadedFile(req.file, 'place');
+  } catch (err) {
+    console.error('Erro ao salvar foto:', err.message);
+    return res.status(500).json({ error: 'Erro ao salvar a foto: ' + err.message });
+  }
   if (!photo) return res.status(500).json({ error: 'Não foi possível salvar a foto. Verifique se o Vercel Blob está configurado (BLOB_READ_WRITE_TOKEN).' });
   const caption = req.body.caption || '';
   const db = getDb();

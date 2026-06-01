@@ -201,6 +201,7 @@ router.post('/place', async (req, res) => {
 router.post('/place/photo', uploadPlace.single('photo'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'Selecione uma foto.' });
   const photo = await saveUploadedFile(req.file, 'place');
+  if (!photo) return res.status(500).json({ error: 'Não foi possível salvar a foto. Verifique se o Vercel Blob está configurado (BLOB_READ_WRITE_TOKEN).' });
   const caption = req.body.caption || '';
   const db = getDb();
   await db.prepare('INSERT INTO place_photos (photo, caption) VALUES (?, ?)').run(photo, caption);

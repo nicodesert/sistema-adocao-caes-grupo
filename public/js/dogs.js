@@ -124,7 +124,7 @@ async function loadMyAdoptions() {
                             <td>${a.age || '-'}</td>
                             <td>${new Date(a.adoption_date).toLocaleDateString('pt-BR')}</td>
                             <td><span class="status-${a.status}">${statusLabels[a.status] || a.status}</span></td>
-                            <td>${a.status !== 'approved' ? `<button class="btn btn-outline" onclick="cancelAdoption(${a.adoption_id})">Cancelar</button>` : ''}</td>
+                            <td><button class="btn btn-outline" onclick="cancelAdoption(${a.adoption_id})">Cancelar</button></td>
                         </tr>
                     `).join('')}
                 </tbody>

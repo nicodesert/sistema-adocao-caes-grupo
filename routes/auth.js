@@ -12,6 +12,7 @@ const { setAuthCookie, clearAuthCookie } = require('../lib/auth');
 
 // GET /api/auth/me — retorna dados do usuário logado
 router.get('/me', (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
   if (req.session && req.session.user) {
     return res.json(req.session.user);
   }
@@ -70,6 +71,7 @@ router.post('/register', async (req, res) => {
 
 // GET /api/auth/logout — encerrar sessão
 router.get('/logout', (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
   req.session = { user: null };
   clearAuthCookie(res);
   res.json({ message: 'Logout realizado.' });

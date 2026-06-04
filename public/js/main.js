@@ -1,4 +1,4 @@
-﻿window.currentUser = null;
+window.currentUser = null;
 
 async function apiCall(url, options = {}) {
     const response = await fetch(url, options);
@@ -24,25 +24,25 @@ function buildNavbar() {
     if (!window.currentUser) {
         navbar.innerHTML = `
         <div class="container">
-            <a href="/index.html" class="navbar-logo">🐾 PETMEL ADOÇÕES</a>
+            <a href="/" class="navbar-logo">🐾 PETMEL ADOÇÕES</a>
             <ul class="navbar-menu">
-                <li><a href="/index.html" class="navbar-link">Início</a></li>
-                <li><a href="/dogs.html" class="navbar-link">Cães Disponíveis</a></li>
-                <li><a href="/place.html" class="navbar-link">Local</a></li>
-                <li><a href="/login.html" class="navbar-link">Login</a></li>
-                <li><a href="/register.html" class="btn btn-primary">Cadastro</a></li>
+                <li><a href="/" class="navbar-link">Início</a></li>
+                <li><a href="/caes" class="navbar-link">Cães Disponíveis</a></li>
+                <li><a href="/local" class="navbar-link">Local</a></li>
+                <li><a href="/login" class="navbar-link">Login</a></li>
+                <li><a href="/cadastro" class="btn btn-primary">Cadastro</a></li>
             </ul>
         </div>`;
     } else if (window.currentUser.role === 'admin') {
         navbar.innerHTML = `
         <div class="container">
-            <a href="/admin/index.html" class="navbar-logo">🐾 PETMEL ADOÇÕES</a>
+            <a href="/admin" class="navbar-logo">🐾 PETMEL ADOÇÕES</a>
             <ul class="navbar-menu">
-                <li><a href="/admin/index.html" class="navbar-link">Dashboard</a></li>
-                <li><a href="/admin/dogs.html" class="navbar-link">Cães</a></li>
-                <li><a href="/admin/clients.html" class="navbar-link">Clientes</a></li>
-                <li><a href="/admin/adoptions.html" class="navbar-link">Adoções</a></li>
-                <li><a href="/place.html" class="navbar-link">Local</a></li>
+                <li><a href="/admin" class="navbar-link">Dashboard</a></li>
+                <li><a href="/admin/caes" class="navbar-link">Cães</a></li>
+                <li><a href="/admin/clientes" class="navbar-link">Clientes</a></li>
+                <li><a href="/admin/adocoes" class="navbar-link">Adoções</a></li>
+                <li><a href="/admin/local" class="navbar-link">Local</a></li>
                 <li><a href="#" class="navbar-link">${window.currentUser.name}</a></li>
                 <li><a href="#" class="navbar-link" onclick="logout()">Sair</a></li>
             </ul>
@@ -50,12 +50,12 @@ function buildNavbar() {
     } else {
         navbar.innerHTML = `
         <div class="container">
-            <a href="/index.html" class="navbar-logo">🐾 PETMEL ADOÇÕES</a>
+            <a href="/" class="navbar-logo">🐾 PETMEL ADOÇÕES</a>
             <ul class="navbar-menu">
-                <li><a href="/index.html" class="navbar-link">Início</a></li>
-                <li><a href="/dogs.html" class="navbar-link">Cães Disponíveis</a></li>
-                <li><a href="/my-adoptions.html" class="navbar-link">Minhas Adoções</a></li>
-                <li><a href="/place.html" class="navbar-link">Local</a></li>
+                <li><a href="/" class="navbar-link">Início</a></li>
+                <li><a href="/caes" class="navbar-link">Cães Disponíveis</a></li>
+                <li><a href="/minhas-adocoes" class="navbar-link">Minhas Adoções</a></li>
+                <li><a href="/local" class="navbar-link">Local</a></li>
                 <li><a href="#" class="navbar-link">${window.currentUser.name}</a></li>
                 <li><a href="#" class="navbar-link" onclick="logout()">Sair</a></li>
             </ul>
@@ -65,7 +65,7 @@ function buildNavbar() {
 
 async function logout() {
     await fetch('/api/auth/logout', { method: 'GET' });
-    location.href = '/login.html';
+    location.href = '/login';
 }
 
 function showAlert(message, type = 'success') {
@@ -89,7 +89,7 @@ async function loadFeaturedDogs() {
                 <div class="card-content">
                     <h3 class="card-title">${dog.name}</h3>
                     <p class="card-text">${dog.age || ''}</p>
-                    <a class="btn btn-primary" href="/dog-detail.html?id=${dog.id}">
+                    <a class="btn btn-primary" href="/caes/${dog.id}">
                         Ver detalhes
                     </a>
                 </div>

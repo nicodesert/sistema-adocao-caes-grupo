@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -12,21 +12,40 @@
   <div id="alert-container"></div>
 
   <main class="container" style="padding-top:40px;padding-bottom:60px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+
+    <div class="admin-page-header">
       <h2>Painel Administrativo</h2>
     </div>
 
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:30px">
-      <a href="/admin/dogs.html" class="btn btn-primary">🐕 Gerenciar Cães</a>
-      <a href="/admin/dog-form.html" class="btn btn-success">+ Adicionar Cão</a>
-      <a href="/admin/clients.html" class="btn btn-secondary">👥 Clientes</a>
-      <a href="/admin/adoptions.html" class="btn btn-secondary">📋 Adoções</a>
-      <a href="/admin/place.html" class="btn btn-secondary">📍 Local</a>
+    <!-- Atalhos de navegação -->
+    <div class="admin-nav-grid">
+      <a href="/admin/dogs.html" class="admin-nav-card">
+        <span class="nav-icon">🐕</span>
+        Gerenciar Cães
+      </a>
+      <a href="/admin/dog-form.html" class="admin-nav-card">
+        <span class="nav-icon">➕</span>
+        Adicionar Cão
+      </a>
+      <a href="/admin/clients.html" class="admin-nav-card">
+        <span class="nav-icon">👥</span>
+        Clientes
+      </a>
+      <a href="/admin/adoptions.html" class="admin-nav-card">
+        <span class="nav-icon">📋</span>
+        Adoções
+      </a>
+      <a href="/admin/place.html" class="admin-nav-card">
+        <span class="nav-icon">📍</span>
+        Local
+      </a>
     </div>
 
+    <!-- Cards de estatísticas -->
     <div id="dashboard" class="stats-grid">
       <p>Carregando...</p>
     </div>
+
   </main>
 
   <footer>

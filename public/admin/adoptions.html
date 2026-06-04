@@ -12,23 +12,26 @@
   <div id="alert-container"></div>
 
   <main class="container" style="padding-top:40px;padding-bottom:60px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+
+    <div class="admin-page-header">
       <h2>Solicitações de Adoção</h2>
       <a href="/admin/index.html" class="btn btn-secondary">← Dashboard</a>
     </div>
 
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
-      <button class="btn btn-secondary filter-btn active" data-filter="all" onclick="filterAdoptions('all')">Todas</button>
-      <button class="btn btn-secondary filter-btn" data-filter="pending" onclick="filterAdoptions('pending')">Pendentes</button>
-      <button class="btn btn-secondary filter-btn" data-filter="approved" onclick="filterAdoptions('approved')">Aprovadas</button>
-      <button class="btn btn-secondary filter-btn" data-filter="rejected" onclick="filterAdoptions('rejected')">Rejeitadas</button>
+    <!-- Filtros -->
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all" onclick="filterAdoptions('all')">Todas</button>
+      <button class="filter-btn" data-filter="pending" onclick="filterAdoptions('pending')">Pendentes</button>
+      <button class="filter-btn" data-filter="approved" onclick="filterAdoptions('approved')">Aprovadas</button>
+      <button class="filter-btn" data-filter="rejected" onclick="filterAdoptions('rejected')">Rejeitadas</button>
     </div>
 
     <div class="table-container">
       <div id="admin-adoptions">
-        <p>Carregando...</p>
+        <p style="text-align:center;padding:40px;color:#64748b">Carregando...</p>
       </div>
     </div>
+
   </main>
 
   <footer>

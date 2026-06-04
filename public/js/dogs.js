@@ -17,7 +17,7 @@ async function loadDogs() {
                     ${dog.age ? `<strong>Idade:</strong> ${dog.age}<br>` : ''}
                     ${dog.condition ? `<strong>Condição:</strong> ${dog.condition}` : ''}
                 </p>
-                <a class="btn btn-primary mt-2" href="/dog-detail.html?id=${dog.id}">
+                <a class="btn btn-primary mt-2" href="/caes/${dog.id}">
                     Ver detalhes
                 </a>
             </div>
@@ -28,8 +28,9 @@ async function loadDogs() {
 async function loadDogDetail() {
     const container = document.getElementById('dog-detail');
     if (!container) return;
-    const params = new URLSearchParams(location.search);
-    const id = params.get('id');
+    // Suporta tanto /caes/123 quanto /dog-detail.html?id=123
+    const segments = location.pathname.split('/').filter(Boolean);
+    const id = segments[segments.length - 1] || new URLSearchParams(location.search).get('id');
     let dog;
     try {
         dog = await apiCall(`/api/dogs/${id}`);
@@ -41,7 +42,7 @@ async function loadDogDetail() {
     if (!dog.available) {
         actionHtml = `<span class="badge badge-unavailable">Já adotado 🏠</span>`;
     } else if (!window.currentUser) {
-        actionHtml = `<a class="btn btn-outline" href="/login.html">Faça login para adotar</a>`;
+        actionHtml = `<a class="btn btn-outline" href="/login">Faça login para adotar</a>`;
     } else {
         actionHtml = `<button class="btn btn-primary" onclick="requestAdopt(${dog.id})">🐾 Quero Adotar</button>`;
     }
@@ -72,7 +73,7 @@ async function requestAdopt(id) {
     try {
         await apiCall(`/api/dogs/${id}/adopt`, { method: 'POST' });
         showAlert('Solicitação enviada');
-        location.href = '/my-adoptions.html';
+        location.href = '/minhas-adocoes';
     } catch (err) {
         showAlert(err.message, 'error');
     }
@@ -82,14 +83,14 @@ async function loadMyAdoptions() {
     const container = document.getElementById('my-adoptions');
     if (!container) return;
     if (!window.currentUser) {
-        location.href = '/login.html';
+        location.href = '/login';
         return;
     }
     let adoptions;
     try {
         adoptions = await apiCall('/api/dogs/my-adoptions');
     } catch (err) {
-        if (err.message && err.message.includes('401')) location.href = '/login.html';
+        if (err.message && err.message.includes('401')) location.href = '/login';
         else container.innerHTML = `<p class="text-center">Erro ao carregar adoções.</p>`;
         return;
     }

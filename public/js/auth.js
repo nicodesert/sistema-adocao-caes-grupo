@@ -30,7 +30,7 @@ window.appReady.then(() => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
-                location.href = loginData.user && loginData.user.role === 'admin' ? '/admin/index.html' : '/index.html';
+                location.href = loginData.user && loginData.user.role === 'admin' ? '/admin' : '/';
             } catch (err) {
                 showAlert(err.message, 'error');
             }
@@ -57,7 +57,7 @@ window.appReady.then(() => {
                     body: JSON.stringify(formData)
                 });
                 showAlert('Cadastro realizado com sucesso');
-                setTimeout(() => { location.href = '/login.html'; }, 1000);
+                setTimeout(() => { location.href = '/login'; }, 1000);
             } catch (err) {
                 showAlert(err.message, 'error');
             }

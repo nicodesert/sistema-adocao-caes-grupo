@@ -1,23 +1,18 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Local - PETMEL ADOÇÕES">
-    <meta name="keywords" content="local, endereço, contato, PETMEL ADOÇÕES">
     <meta name="author" content="PETMEL ADOÇÕES">
     <title>Local | PETMEL ADOÇÕES</title>
-    <link rel="stylesheet" href="css/style-place.css">
+    <link rel="stylesheet" href="/css/style-place.css">
 </head>
 <body>
   <div id="alert-container"></div>
-
-    <!-- Navbar -->
     <nav id="navbar" class="navbar"></nav>
 
-    <!-- Main Content -->
     <main>
-        <!-- Informações do Local -->
         <section class="section">
             <div class="container">
                 <div id="place-info">
@@ -26,7 +21,6 @@
             </div>
         </section>
 
-        <!-- Galeria de Fotos -->
         <section class="section" style="background-color: var(--white);" id="gallery-section" style="display:none">
             <div class="container">
                 <h2 class="section-title text-center">Galeria de Fotos</h2>
@@ -34,14 +28,12 @@
             </div>
         </section>
 
-        <!-- Seja um Acolhedor -->
         <section class="section" id="register-host">
             <div class="container">
                 <div class="section-header">
                     <h2 class="section-title text-center">Quer ser acolhedor? Cadastre-se!</h2>
                     <p class="text-center">Abrigue um cão temporariamente em sua casa e ajude a salvar vidas.</p>
                 </div>
-                
                 <div class="form-container">
                     <form id="host-form">
                         <div class="form-group">
@@ -81,16 +73,13 @@
                             <label for="experience">Possui experiência com cães?</label>
                             <textarea id="experience" name="experience" rows="3" placeholder="Conte-nos sobre sua experiência com animais..."></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">
-                            Enviar solicitação
-                        </button>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Enviar solicitação</button>
                     </form>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -101,9 +90,9 @@
                 <div class="footer-section">
                     <h4>Links rápidos</h4>
                     <ul class="footer-links">
-                        <li><a href="index.html">Início</a></li>
-                        <li><a href="dogs.html">Cães disponíveis</a></li>
-                        <li><a href="place.html">Local</a></li>
+                        <li><a href="/">Início</a></li>
+                        <li><a href="/caes">Cães disponíveis</a></li>
+                        <li><a href="/local">Local</a></li>
                     </ul>
                 </div>
                 <div class="footer-section" id="footer-contact">
@@ -119,7 +108,7 @@
         </div>
     </footer>
 
-    <script src="js/main.js" defer></script>
-    <script src="/js/place.js" defer></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/place.js"></script>
 </body>
 </html>

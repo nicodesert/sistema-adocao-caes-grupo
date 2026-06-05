@@ -6,7 +6,7 @@
 window.appReady.then(() => {
   // Verifica se é admin
   if (!window.currentUser || window.currentUser.role !== 'admin') {
-    window.location.href = '/login.html';
+    window.location.href = '/login';
     return;
   }
 
@@ -28,23 +28,23 @@ async function initDashboard() {
     const stats = await apiCall('/api/admin/dashboard');
     const container = document.getElementById('dashboard');
     container.innerHTML = `
-      <div class="stat-card">
+      <div class="stat-card stat-dogs">
         <div class="stat-number">${stats.totalDogs}</div>
         <div class="stat-label">Total de Cães</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card stat-available">
         <div class="stat-number">${stats.availableDogs}</div>
         <div class="stat-label">Disponíveis</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card stat-clients">
         <div class="stat-number">${stats.totalUsers}</div>
         <div class="stat-label">Clientes</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card stat-pending">
         <div class="stat-number">${stats.pendingAdoptions}</div>
         <div class="stat-label">Adoções Pendentes</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card stat-approved">
         <div class="stat-number">${stats.approvedAdoptions}</div>
         <div class="stat-label">Adoções Aprovadas</div>
       </div>
@@ -77,7 +77,7 @@ async function initAdminDogs() {
           <td>${dog.condition || '-'}</td>
           <td>${dog.available ? '<span class="badge badge-available">Disponível</span>' : '<span class="badge badge-unavailable">Adotado</span>'}</td>
           <td>
-            <a href="/admin/dog-form.html?id=${dog.id}" class="btn btn-primary btn-sm">Editar</a>
+            <a href="/admin/caes/editar?id=${dog.id}" class="btn btn-primary btn-sm">Editar</a>
             <button class="btn btn-danger btn-sm" onclick="deleteDog(${dog.id})">Excluir</button>
           </td>
         </tr>
@@ -111,8 +111,6 @@ async function initDogForm() {
 
   setupImagePreview('photo', 'photo-preview');
 
-  // Registra o listener de submit ANTES do carregamento assíncrono
-  // para evitar que cliques rápidos sejam ignorados
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
     const formData = new FormData(form);
@@ -127,7 +125,7 @@ async function initDogForm() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       showAlert(data.message, 'success');
-      setTimeout(() => { window.location.href = '/admin/dogs.html'; }, 1000);
+      setTimeout(() => { window.location.href = '/admin/caes'; }, 1000);
     } catch (err) {
       showAlert(err.message || 'Erro ao salvar.', 'error');
       submitBtn.disabled = false;
@@ -135,7 +133,6 @@ async function initDogForm() {
     }
   });
 
-  // Se tem ID na URL, é edição — carrega dados do cão
   if (dogId) {
     document.getElementById('form-title').textContent = 'Editar Cão';
     document.getElementById('available-group').style.display = 'block';
@@ -187,7 +184,7 @@ async function initAdminClients() {
           <td>${c.phone}</td>
           <td>${c.cpf}</td>
           <td>
-            <a href="/admin/client-detail.html?id=${c.id}" class="btn btn-primary btn-sm">Detalhes</a>
+            <a href="/admin/clientes/detalhes?id=${c.id}" class="btn btn-primary btn-sm">Detalhes</a>
             <button class="btn btn-danger btn-sm" onclick="deleteClient(${c.id})">Excluir</button>
           </td>
         </tr>
@@ -250,7 +247,7 @@ async function initClientDetail() {
     }
 
     container.innerHTML = `
-      <a href="/admin/clients.html" class="btn btn-secondary btn-sm mb-20">&larr; Voltar</a>
+      <a href="/admin/clientes" class="btn btn-secondary btn-sm mb-20">&larr; Voltar</a>
       <div class="detail-info" style="max-width:600px">
         <h1>${client.name}</h1>
         <p><strong>Email:</strong> ${client.email}</p>
@@ -293,7 +290,7 @@ async function initAdminAdoptions() {
             ${a.dog_photo ? '<img src="' + a.dog_photo + '" class="table-img">' : ''}
             ${a.dog_name}
           </td>
-          <td><a href="/admin/client-detail.html?id=${a.user_id}">${a.user_name}</a></td>
+          <td><a href="/admin/clientes/detalhes?id=${a.user_id}">${a.user_name}</a></td>
           <td>${a.user_email}</td>
           <td>${a.user_phone}</td>
           <td>${statusLabel[a.status] || a.status}</td>
@@ -362,7 +359,6 @@ async function initAdminPlace() {
     const place = data.place || {};
     const photos = data.photos || [];
 
-    // Monta o formulário de edição + galeria de fotos
     container.innerHTML = `
       <div class="form-container mb-20">
         <h2 class="mb-20">Editar Informações</h2>
@@ -430,7 +426,6 @@ async function initAdminPlace() {
       </div>
     `;
 
-    // Salvar informações do local
     document.getElementById('place-form').addEventListener('submit', async function (e) {
       e.preventDefault();
       const formData = {
@@ -456,7 +451,6 @@ async function initAdminPlace() {
       }
     });
 
-    // Enviar foto
     document.getElementById('place-photo-form').addEventListener('submit', async function (e) {
       e.preventDefault();
       const formData = new FormData(this);
@@ -466,7 +460,7 @@ async function initAdminPlace() {
         const result = await res.json();
         if (!res.ok) throw new Error(result.error);
         showAlert(result.message, 'success');
-        initAdminPlace(); // recarrega
+        initAdminPlace();
       } catch (err) {
         showAlert(err.message, 'error');
       }

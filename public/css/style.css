@@ -1,5 +1,5 @@
-﻿/* 
-   VARIÃVEIS CSS
+/* 
+   VARIÁVEIS CSS
  */
 :root {
     --primary-color: #1d4ed8;
@@ -44,7 +44,7 @@ img {
 }
 
 /*
-   UTILITÃRIOS
+   UTILITÁRIOS
  */
 .container {
     max-width: 1200px;
@@ -68,7 +68,7 @@ img {
 .mb-4 { margin-bottom: 2rem; }
 
 /*
-   BOTÃ•ES
+   BOTÕES
  */
 .btn {
     display: inline-block;
@@ -151,6 +151,7 @@ img {
 
 .navbar-menu {
     display: flex;
+    align-items: center;
     gap: 2rem;
 }
 
@@ -164,8 +165,40 @@ img {
     color: var(--primary-color);
 }
 
-/* 
+/* Botão hambúrguer — só aparece no mobile */
+.navbar-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    z-index: 1100;
+}
 
+.navbar-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: var(--text-dark);
+    border-radius: 2px;
+    transition: var(--transition);
+}
+
+/* Animação do X quando aberto */
+.navbar-toggle.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+.navbar-toggle.open span:nth-child(2) {
+    opacity: 0;
+}
+.navbar-toggle.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* 
    HERO SECTION
  */
 .hero {
@@ -283,7 +316,7 @@ img {
 }
 
 /* 
-   FORMULÃRIO
+   FORMULÁRIO
 */
 .form-container {
     max-width: 600px;
@@ -381,83 +414,71 @@ footer {
     color: var(--text-light);
 }
 
-/*
-   RESPONSIVO
- */
-@media (max-width: 768px) {
-    .hero-content h1 {
-        font-size: 2rem;
-    }
-
-    .hero-content p {
-        font-size: 1rem;
-    }
-
-    .navbar-menu {
-        display: none;
-    }
-
-    .section-header {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .form-container {
-        padding: 1.5rem;
-    }
-}
-}
-
-.footer-section p {
-    color: #aaa;
-    line-height: 1.8;
-}
-
-.footer-links li {
-    margin-bottom: 0.5rem;
-}
-
-.footer-links a {
-    color: #aaa;
-    transition: var(--transition);
-}
-
-.footer-links a:hover {
-    color: var(--bg-white);
-}
-
-.footer-bottom {
+/* Empty state (lista vazia) */
+.empty-state {
     text-align: center;
-    padding-top: 2rem;
-    border-top: 1px solid #333;
-    color: #aaa;
-}
-
-/* 
-   LOADING
- */
-.loading {
-    text-align: center;
-    padding: 3rem;
+    padding: 3rem 1rem;
     color: var(--text-light);
 }
 
+.empty-state-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
 /*
-   RESPONSIVO
+   RESPONSIVO — mobile (único bloco, sem duplicata)
  */
 @media (max-width: 768px) {
+    /* Hero */
     .hero-content h1 {
         font-size: 2rem;
     }
-
     .hero-content p {
         font-size: 1rem;
     }
 
-    .navbar-menu {
-        display: none;
+    /* Navbar mobile */
+    .navbar-toggle {
+        display: flex;
     }
 
+    .navbar-menu {
+        display: none;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background-color: var(--bg-white);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem 1.5rem 1.5rem;
+        gap: 0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        z-index: 1000;
+    }
+
+    .navbar-menu.open {
+        display: flex;
+    }
+
+    .navbar-menu li {
+        width: 100%;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .navbar-menu li:last-child {
+        border-bottom: none;
+    }
+
+    .navbar-link,
+    .navbar-menu .btn {
+        display: block;
+        padding: 0.85rem 0;
+        width: 100%;
+    }
+
+    /* Seções */
     .section-header {
         flex-direction: column;
         text-align: center;
@@ -466,5 +487,8 @@ footer {
     .form-container {
         padding: 1.5rem;
     }
-}
 
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+}

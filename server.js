@@ -13,7 +13,6 @@ const { initializeDatabase } = require('./database');
 let initializationPromise;
 
 function ensureLocalDirectories() {
-  // No Vercel (Postgres ou Blob habilitado) o filesystem é somente leitura — não criar pastas
   if (process.env.BLOB_READ_WRITE_TOKEN) return;
   if (process.env.POSTGRES_URL || process.env.DATABASE_URL) return;
 
@@ -35,36 +34,38 @@ function createApp() {
   app.use(attachAuth);
 
   // ── Rotas de API ──────────────────────────────────────────────
-  app.use('/api/auth', require('./routes/auth'));
-  app.use('/api/dogs', require('./routes/dogs'));
-  app.use('/api/admin', require('./routes/admin'));
-  app.use('/api/place', require('./routes/place'));
+  app.use('/api/auth',    require('./routes/auth'));
+  app.use('/api/dogs',    require('./routes/dogs'));
+  app.use('/api/admin',   require('./routes/admin'));
+  app.use('/api/place',   require('./routes/place'));
+  app.use('/api/contact', require('./routes/contact')); // ← NOVO
 
   // ── Rotas limpas — páginas públicas ──────────────────────────
   const pub = (file) => (req, res) =>
     res.sendFile(path.join(__dirname, 'public', file));
 
-  app.get('/',              pub('index.html'));
-  app.get('/inicio',        pub('index.html'));
-  app.get('/caes',          pub('dogs.html'));
-  app.get('/caes/:id',      pub('dog-detail.html'));   // ?id= ainda funciona via JS
-  app.get('/local',         pub('place.html'));
-  app.get('/login',         pub('login.html'));
-  app.get('/cadastro',      pub('register.html'));
+  app.get('/',               pub('index.html'));
+  app.get('/inicio',         pub('index.html'));
+  app.get('/caes',           pub('dogs.html'));
+  app.get('/caes/:id',       pub('dog-detail.html'));
+  app.get('/local',          pub('place.html'));
+  app.get('/login',          pub('login.html'));
+  app.get('/cadastro',       pub('register.html'));
   app.get('/minhas-adocoes', pub('my-adoptions.html'));
 
   // ── Rotas limpas — painel admin ───────────────────────────────
   const adm = (file) => (req, res) =>
     res.sendFile(path.join(__dirname, 'public', 'admin', file));
 
-  app.get('/admin',                  adm('index.html'));
-  app.get('/admin/caes',             adm('dogs.html'));
-  app.get('/admin/caes/novo',        adm('dog-form.html'));
-  app.get('/admin/caes/editar',      adm('dog-form.html'));  // ?id= via JS
-  app.get('/admin/clientes',         adm('clients.html'));
-  app.get('/admin/clientes/detalhes', adm('client-detail.html')); // ?id= via JS
-  app.get('/admin/adocoes',          adm('adoptions.html'));
-  app.get('/admin/local',            adm('place.html'));
+  app.get('/admin',                   adm('index.html'));
+  app.get('/admin/caes',              adm('dogs.html'));
+  app.get('/admin/caes/novo',         adm('dog-form.html'));
+  app.get('/admin/caes/editar',       adm('dog-form.html'));
+  app.get('/admin/clientes',          adm('clients.html'));
+  app.get('/admin/clientes/detalhes', adm('client-detail.html'));
+  app.get('/admin/adocoes',           adm('adoptions.html'));
+  app.get('/admin/local',             adm('place.html'));
+  app.get('/admin/mensagens',         adm('messages.html')); // ← NOVO
 
   return app;
 }
@@ -74,7 +75,6 @@ async function initializeApp() {
     ensureLocalDirectories();
     initializationPromise = initializeDatabase();
   }
-
   await initializationPromise;
 }
 
@@ -97,8 +97,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = {
-  createApp,
-  initializeApp,
-  startServer
-};
+module.exports = { createApp, initializeApp, startServer };

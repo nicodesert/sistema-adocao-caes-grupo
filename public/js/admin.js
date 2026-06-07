@@ -95,35 +95,107 @@ async function initDashboard() {
 // =============================================
 // GERENCIAR CÃES (listagem admin)
 // =============================================
+// Cache dos cães para a busca admin
+let _adminAllDogs = [];
+
 async function initAdminDogs() {
   try {
-    const dogs = await apiCall('/api/admin/dogs');
-    const container = document.getElementById('admin-dogs');
+    _adminAllDogs = await apiCall('/api/admin/dogs');
 
-    if (dogs.length === 0) {
-      container.innerHTML = '<div class="empty-message"><span>🐕</span><p>Nenhum cão cadastrado.</p></div>';
+    if (_adminAllDogs.length === 0) {
+      document.getElementById('admin-dogs').innerHTML =
+        '<div class="empty-message"><span>🐕</span><p>Nenhum cão cadastrado.</p></div>';
       return;
     }
 
-    container.innerHTML = '<table>' +
-      '<thead><tr><th>Foto</th><th>Nome</th><th>Idade</th><th>Condição</th><th>Status</th><th>Ações</th></tr></thead><tbody>' +
-      dogs.map(dog => `
-        <tr>
-          <td>${dog.photo ? '<img src="' + dog.photo + '" class="table-img">' : '🐕'}</td>
-          <td><strong>${dog.name}</strong></td>
-          <td>${dog.age}</td>
-          <td>${dog.condition || '-'}</td>
-          <td>${dog.available ? '<span class="badge badge-available">Disponível</span>' : '<span class="badge badge-unavailable">Adotado</span>'}</td>
-          <td>
-            <a href="/admin/caes/editar?id=${dog.id}" class="btn btn-primary btn-sm">Editar</a>
-            <button class="btn btn-danger btn-sm" onclick="deleteDog(${dog.id})">Excluir</button>
-          </td>
-        </tr>
-      `).join('') +
-      '</tbody></table>';
+    renderAdminDogs(_adminAllDogs);
+    setupAdminSearch();
   } catch (err) {
     showAlert('Erro ao carregar cães.', 'error');
   }
+}
+
+function setupAdminSearch() {
+  const input = document.getElementById('admin-search-input');
+  const clear = document.getElementById('admin-search-clear');
+  if (!input) return;
+
+  // Evita duplicar o listener se initAdminDogs for chamado de novo (após excluir)
+  input.oninput = () => {
+    if (clear) clear.style.display = input.value ? 'block' : 'none';
+    applyAdminSearch();
+  };
+}
+
+function applyAdminSearch() {
+  const input  = document.getElementById('admin-search-input');
+  const select = document.getElementById('admin-filter-status');
+  const count  = document.getElementById('admin-search-count');
+  const term   = (input?.value || '').toLowerCase().trim();
+  const status = select?.value || 'all';
+
+  let result = _adminAllDogs.filter(dog => {
+    const matchText = !term ||
+      dog.name.toLowerCase().includes(term) ||
+      (dog.age       || '').toLowerCase().includes(term) ||
+      (dog.condition || '').toLowerCase().includes(term);
+
+    const matchStatus =
+      status === 'all' ||
+      (status === 'available'   && dog.available) ||
+      (status === 'unavailable' && !dog.available);
+
+    return matchText && matchStatus;
+  });
+
+  if (count) {
+    if (term || status !== 'all') {
+      count.style.display = 'block';
+      count.textContent = result.length === 0
+        ? 'Nenhum cão encontrado para os filtros aplicados.'
+        : `${result.length} cão${result.length > 1 ? 'es' : ''} encontrado${result.length > 1 ? 's' : ''}.`;
+    } else {
+      count.style.display = 'none';
+    }
+  }
+
+  renderAdminDogs(result);
+}
+
+function clearAdminSearch() {
+  const input = document.getElementById('admin-search-input');
+  const clear = document.getElementById('admin-search-clear');
+  const select = document.getElementById('admin-filter-status');
+  if (input)  { input.value = ''; }
+  if (clear)  { clear.style.display = 'none'; }
+  if (select) { select.value = 'all'; }
+  applyAdminSearch();
+}
+
+function renderAdminDogs(dogs) {
+  const container = document.getElementById('admin-dogs');
+
+  if (dogs.length === 0) {
+    container.innerHTML = '<div class="empty-message"><span>🔍</span><p>Nenhum cão corresponde à busca.</p></div>';
+    return;
+  }
+
+  container.innerHTML = '<table>' +
+    '<thead><tr><th>Foto</th><th>Nome</th><th>Idade</th><th>Condição</th><th>Status</th><th>Ações</th></tr></thead><tbody>' +
+    dogs.map(dog => `
+      <tr>
+        <td>${dog.photo ? '<img src="' + dog.photo + '" class="table-img">' : '🐕'}</td>
+        <td><strong>${dog.name}</strong></td>
+        <td>${dog.age}</td>
+        <td>${dog.condition || '-'}</td>
+        <td>${dog.available ? '<span class="badge badge-available">Disponível</span>' : '<span class="badge badge-unavailable">Adotado</span>'}</td>
+        <td>
+          <a href="/admin/caes/editar?id=${dog.id}" class="btn btn-primary btn-sm">Editar</a>
+          <button class="btn btn-danger btn-sm" onclick="deleteDog(${dog.id})">Excluir</button>
+        </td>
+      </tr>
+    `).join('') +
+    '</tbody></table>';
 }
 
 async function deleteDog(id) {
@@ -131,7 +203,9 @@ async function deleteDog(id) {
   try {
     await apiCall('/api/admin/dogs/' + id + '/delete', { method: 'POST' });
     showAlert('Cão removido!', 'success');
-    initAdminDogs();
+    // Remove do cache local e re-renderiza sem nova requisição
+    _adminAllDogs = _adminAllDogs.filter(d => d.id !== id);
+    applyAdminSearch();
   } catch (err) {
     showAlert(err.message, 'error');
   }

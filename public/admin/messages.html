@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mensagens - Admin | PETMEL ADOÇÕES</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style-admin.css">
+</head>
+<body>
+  <nav id="navbar" class="navbar"></nav>
+  <div id="alert-container"></div>
+
+  <main class="container" style="padding-top:40px;padding-bottom:60px">
+
+    <div class="admin-page-header">
+      <h2>Mensagens de Contato</h2>
+      <a href="/admin" class="btn btn-secondary">← Dashboard</a>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all"    onclick="filterMessages('all')">Todas</button>
+      <button class="filter-btn"        data-filter="unread" onclick="filterMessages('unread')">Não lidas</button>
+      <button class="filter-btn"        data-filter="read"   onclick="filterMessages('read')">Lidas</button>
+    </div>
+
+    <div class="table-container">
+      <div id="admin-messages">
+        <p style="text-align:center;padding:40px;color:#64748b">Carregando...</p>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p style="text-align:center;padding:20px">&copy; 2026 PETMEL ADOÇÕES</p>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

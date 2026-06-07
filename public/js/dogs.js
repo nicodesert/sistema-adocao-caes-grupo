@@ -3,23 +3,74 @@
 // ============================================
 
 const DOGS_PER_PAGE = 9;
-let currentPage = 1;
-let allDogs = [];
+let currentPage  = 1;
+let allDogs      = [];  // todos os cães carregados da API
+let filteredDogs = [];  // resultado após busca
 
 window.appReady.then(() => {
     loadDogs();
     loadDogDetail();
     loadMyAdoptions();
+    setupPublicSearch();
 });
 
-// ── LISTAGEM COM PAGINAÇÃO E EMPTY STATE ─────────────────────────────────────
+// ── BUSCA PÚBLICA ─────────────────────────────────────────────────────────────
+
+function setupPublicSearch() {
+    const input = document.getElementById('search-input');
+    const clear = document.getElementById('search-clear');
+    if (!input) return;
+
+    input.addEventListener('input', () => {
+        clear.style.display = input.value ? 'block' : 'none';
+        currentPage = 1;
+        applyPublicSearch();
+    });
+
+    clear.addEventListener('click', () => {
+        input.value = '';
+        clear.style.display = 'none';
+        currentPage = 1;
+        applyPublicSearch();
+    });
+}
+
+function applyPublicSearch() {
+    const term  = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
+    const count = document.getElementById('search-count');
+
+    filteredDogs = term
+        ? allDogs.filter(d =>
+            d.name.toLowerCase().includes(term) ||
+            (d.age       || '').toLowerCase().includes(term) ||
+            (d.condition || '').toLowerCase().includes(term) ||
+            (d.description || '').toLowerCase().includes(term)
+          )
+        : [...allDogs];
+
+    if (count) {
+        if (term) {
+            count.style.display = 'block';
+            count.textContent = filteredDogs.length === 0
+                ? `Nenhum cão encontrado para "${term}"`
+                : `${filteredDogs.length} cão${filteredDogs.length > 1 ? 'es' : ''} encontrado${filteredDogs.length > 1 ? 's' : ''} para "${term}"`;
+        } else {
+            count.style.display = 'none';
+        }
+    }
+
+    renderPage(1);
+}
+
+// ── LISTAGEM COM PAGINAÇÃO ────────────────────────────────────────────────────
 
 async function loadDogs() {
     const container = document.getElementById('dogs-list');
     if (!container) return;
 
     try {
-        allDogs = await apiCall('/api/dogs');
+        allDogs      = await apiCall('/api/dogs');
+        filteredDogs = [...allDogs];
     } catch (err) {
         container.innerHTML = `<p class="text-center">Erro ao carregar cães. Tente novamente.</p>`;
         return;
@@ -35,16 +86,28 @@ async function loadDogs() {
         return;
     }
 
-    renderPage(currentPage);
+    renderPage(1);
 }
 
 function renderPage(page) {
+    currentPage = page;
     const container = document.getElementById('dogs-list');
     if (!container) return;
 
-    const totalPages = Math.ceil(allDogs.length / DOGS_PER_PAGE);
-    const start = (page - 1) * DOGS_PER_PAGE;
-    const pageDogs = allDogs.slice(start, start + DOGS_PER_PAGE);
+    // Empty state da busca
+    if (!filteredDogs.length) {
+        container.innerHTML = `
+            <div style="grid-column:1/-1;text-align:center;padding:3rem 1rem">
+                <div style="font-size:3rem;margin-bottom:1rem">🔍</div>
+                <p style="color:var(--gray-600)">Nenhum cão corresponde à sua busca.</p>
+            </div>`;
+        removePagination();
+        return;
+    }
+
+    const totalPages = Math.ceil(filteredDogs.length / DOGS_PER_PAGE);
+    const start      = (page - 1) * DOGS_PER_PAGE;
+    const pageDogs   = filteredDogs.slice(start, start + DOGS_PER_PAGE);
 
     container.innerHTML = pageDogs.map(dog => `
         <article class="card">
@@ -56,7 +119,7 @@ function renderPage(page) {
             <div class="card-content">
                 <h3 class="card-title">${dog.name}</h3>
                 <p class="card-text">
-                    ${dog.age     ? `<strong>Idade:</strong> ${dog.age}<br>` : ''}
+                    ${dog.age       ? `<strong>Idade:</strong> ${dog.age}<br>` : ''}
                     ${dog.condition ? `<strong>Condição:</strong> ${dog.condition}` : ''}
                 </p>
                 <a class="btn btn-primary mt-2" href="/caes/${dog.id}">Ver detalhes</a>
@@ -64,15 +127,11 @@ function renderPage(page) {
         </article>
     `).join('');
 
-    // Paginação — só mostra se tiver mais de uma página
     renderPagination(page, totalPages);
 }
 
 function renderPagination(page, totalPages) {
-    // Remove paginação anterior se existir
-    const old = document.getElementById('pagination');
-    if (old) old.remove();
-
+    removePagination();
     if (totalPages <= 1) return;
 
     const container = document.getElementById('dogs-list');
@@ -82,40 +141,39 @@ function renderPagination(page, totalPages) {
     nav.style.cssText = 'grid-column:1/-1;display:flex;justify-content:center;align-items:center;gap:8px;margin-top:1rem;flex-wrap:wrap';
 
     const btnStyle = (active) =>
-        `padding:8px 14px;border-radius:6px;border:2px solid var(--primary);font-weight:600;cursor:pointer;transition:all 0.2s;font-size:0.875rem;` +
-        (active
-            ? `background:var(--primary);color:#fff;`
-            : `background:transparent;color:var(--primary);`);
+        `padding:8px 14px;border-radius:6px;border:2px solid var(--primary);font-weight:600;cursor:pointer;transition:all 0.2s;font-size:0.875rem;background:${active ? 'var(--primary)' : 'transparent'};color:${active ? '#fff' : 'var(--primary)'};`;
 
-    // Anterior
     const prev = document.createElement('button');
     prev.textContent = '← Anterior';
     prev.style.cssText = btnStyle(false);
-    prev.disabled = page === 1;
     if (page === 1) prev.style.opacity = '0.4';
-    prev.addEventListener('click', () => { currentPage--; renderPage(currentPage); window.scrollTo(0, 0); });
+    prev.disabled = page === 1;
+    prev.addEventListener('click', () => { renderPage(currentPage - 1); window.scrollTo(0, 0); });
     nav.appendChild(prev);
 
-    // Numeração
     for (let i = 1; i <= totalPages; i++) {
         const btn = document.createElement('button');
         btn.textContent = i;
         btn.style.cssText = btnStyle(i === page);
         btn.setAttribute('aria-current', i === page ? 'page' : undefined);
-        btn.addEventListener('click', () => { currentPage = i; renderPage(currentPage); window.scrollTo(0, 0); });
+        btn.addEventListener('click', () => { renderPage(i); window.scrollTo(0, 0); });
         nav.appendChild(btn);
     }
 
-    // Próximo
     const next = document.createElement('button');
     next.textContent = 'Próximo →';
     next.style.cssText = btnStyle(false);
-    next.disabled = page === totalPages;
     if (page === totalPages) next.style.opacity = '0.4';
-    next.addEventListener('click', () => { currentPage++; renderPage(currentPage); window.scrollTo(0, 0); });
+    next.disabled = page === totalPages;
+    next.addEventListener('click', () => { renderPage(currentPage + 1); window.scrollTo(0, 0); });
     nav.appendChild(next);
 
     container.insertAdjacentElement('afterend', nav);
+}
+
+function removePagination() {
+    const old = document.getElementById('pagination');
+    if (old) old.remove();
 }
 
 // ── DETALHE DO CÃO ────────────────────────────────────────────────────────────
@@ -182,10 +240,7 @@ async function loadMyAdoptions() {
     const container = document.getElementById('my-adoptions');
     if (!container) return;
 
-    if (!window.currentUser) {
-        location.href = '/login';
-        return;
-    }
+    if (!window.currentUser) { location.href = '/login'; return; }
 
     let adoptions;
     try {
@@ -212,16 +267,12 @@ async function loadMyAdoptions() {
         <div class="table-container">
             <table>
                 <thead>
-                    <tr>
-                        <th>Foto</th><th>Nome</th><th>Idade</th>
-                        <th>Data</th><th>Status</th><th>Ações</th>
-                    </tr>
+                    <tr><th>Foto</th><th>Nome</th><th>Idade</th><th>Data</th><th>Status</th><th>Ações</th></tr>
                 </thead>
                 <tbody>
                     ${adoptions.map(a => `
                         <tr>
-                            <td><img src="${a.photo}" alt="${a.name}"
-                                onerror="this.style.display='none'"></td>
+                            <td><img src="${a.photo}" alt="${a.name}" onerror="this.style.display='none'"></td>
                             <td>${a.name}</td>
                             <td>${a.age || '-'}</td>
                             <td>${new Date(a.adoption_date).toLocaleDateString('pt-BR')}</td>

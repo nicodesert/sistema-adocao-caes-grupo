@@ -4,166 +4,176 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="PETMEL ADOÇÕES - Encontre seu novo melhor amigo. Adote um cãozinho e transforme uma vida com amor e felicidade.">
-    <meta name="keywords" content="adoção de cães, adotar cão, refugio de animais, PETMEL ADOÇÕES">
-    <meta name="author" content="PETMEL ADOÇÕES">
-    <meta name="robots" content="index, follow">
     <title>PETMEL ADOÇÕES | Adoção de Cães</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
   <div id="alert-container"></div>
-    <nav id="navbar" class="navbar"></nav>
+  <nav id="navbar" class="navbar"></nav>
 
-    <header class="hero">
-        <div class="container hero-content">
-            <h1>Encontre seu novo melhor amigo 🐶</h1>
-            <p>Adote um cãozinho e transforme uma vida com amor, carinho e felicidade.</p>
-            <div class="mt-4">
-                <a href="/caes" class="btn btn-secondary">Ver cães disponíveis</a>
-            </div>
+  <header class="hero">
+    <div class="container hero-content">
+      <h1>Encontre seu novo melhor amigo 🐶</h1>
+      <p>Adote um cãozinho e transforme uma vida com amor, carinho e felicidade.</p>
+      <div class="mt-4">
+        <a href="/caes" class="btn btn-secondary">Ver cães disponíveis</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section" id="featured">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Cães em destaque</h2>
+          <a href="/caes" class="btn btn-primary">Ver todos</a>
         </div>
-    </header>
-
-    <main>
-        <section class="section" id="featured">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Cães em destaque</h2>
-                    <a href="/caes" class="btn btn-primary">Ver todos</a>
-                </div>
-                <div id="featured-dogs" class="cards-grid">
-                    <div class="loading"><p>Carregando cães...</p></div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section about" id="about">
-            <div class="container">
-                <div class="about-content">
-                    <h2 class="section-title text-center">Por que adotar?</h2>
-                    <p class="mt-3">
-                        Milhares de cães aguardam uma família amorosa.
-                        Ao adotar, você salva uma vida e ganha um amigo fiel.
-                        A adoção responsável traz alegria para ambos os lados.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <section class="section features">
-            <div class="container">
-                <div class="cards-grid">
-                    <article class="card">
-                        <div class="card-content text-center">
-                            <h3>🐾 Adoção responsável</h3>
-                            <p class="mt-2 card-text">Todos os animais recebem cuidados especiais e avaliações comportamentais antes da adoção.</p>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <div class="card-content text-center">
-                            <h3>💉 Vacinação em dia</h3>
-                            <p class="mt-2 card-text">Nossos cães são vacinados, vermifugados e acompanhados por veterinários especializados.</p>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <div class="card-content text-center">
-                            <h3>❤️ Muito amor</h3>
-                            <p class="mt-2 card-text">Nosso objetivo é encontrar um lar cheio de carinho para cada cãozinho.</p>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section class="section" id="contact">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title text-center">Fale conosco</h2>
-                </div>
-                <div class="form-container">
-                    <form id="contact-form">
-                        <div class="form-group">
-                            <label for="contact-name">Nome completo</label>
-                            <input type="text" id="contact-name" name="name" placeholder="Seu nome completo" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="contact-email">E-mail</label>
-                            <input type="email" id="contact-email" name="email" placeholder="seu@email.com" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="contact-phone">Telefone</label>
-                            <input type="tel" id="contact-phone" name="phone" placeholder="(00) 00000-0000">
-                        </div>
-                        <div class="form-group">
-                            <label for="contact-message">Mensagem</label>
-                            <textarea id="contact-message" name="message" rows="5" placeholder="Como podemos ajudar?" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Enviar mensagem</button>
-                    </form>
-                </div>
-            </div>
-        </section>
-    </main>
-
-        <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4 id="footer-name">🐾 PETMEL ADOÇÕES</h4>
-                    <p>Sistema de adoção de cães desenvolvido para conectar animais e famílias amorosas.</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Links rápidos</h4>
-                    <ul class="footer-links">
-                        <li><a href="/">Início</a></li>
-                        <li><a href="/caes">Cães disponíveis</a></li>
-                        <li><a href="/local">Local</a></li>
-                        <li><a href="/#contact">Contato</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Contato</h4>
-                    <ul class="footer-links">
-                        <li id="footer-email">📧 contato@petmel.com.br</li>
-                        <li id="footer-phone">📱 (00) 00000-0000</li>
-                        <li id="footer-address">📍 Rua exemplo, 123 - Cidade/UF</li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Redes sociais</h4>
-                    <ul class="footer-links">
-                        <li><a href="#" target="_blank">📘 Facebook</a></li>
-                        <li><a href="#" target="_blank">📸 Instagram</a></li>
-                        <li><a href="#" target="_blank">💬 WhatsApp</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 PETMEL ADOÇÕES. Todos os direitos reservados.</p>
-            </div>
+        <div id="featured-dogs" class="cards-grid">
+          <div class="loading"><p>Carregando cães...</p></div>
         </div>
-    </footer>
+      </div>
+    </section>
 
-    <script src="/js/main.js"></script>
-    <script>
-        // Handler do formulário de contato
-        window.appReady.then(() => {
-            const form = document.getElementById('contact-form');
-            if (!form) return;
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const btn = form.querySelector('button[type="submit"]');
-                btn.disabled = true;
-                btn.textContent = 'Enviando...';
-                // Simulação — substitua por apiCall('/api/contact', {...}) quando criar a rota
-                setTimeout(() => {
-                    showAlert('Mensagem enviada! Entraremos em contato em breve.');
-                    form.reset();
-                    btn.disabled = false;
-                    btn.textContent = 'Enviar mensagem';
-                }, 800);
-            });
-        });
-    </script>
+    <section class="section about" id="about">
+      <div class="container">
+        <div class="about-content">
+          <h2 class="section-title text-center">Por que adotar?</h2>
+          <p class="mt-3">
+            Milhares de cães aguardam uma família amorosa.
+            Ao adotar, você salva uma vida e ganha um amigo fiel.
+            A adoção responsável traz alegria para ambos os lados.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section features">
+      <div class="container">
+        <div class="cards-grid">
+          <article class="card">
+            <div class="card-content text-center">
+              <h3>🐾 Adoção responsável</h3>
+              <p class="mt-2 card-text">Todos os animais recebem cuidados especiais e avaliações comportamentais antes da adoção.</p>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-content text-center">
+              <h3>💉 Vacinação em dia</h3>
+              <p class="mt-2 card-text">Nossos cães são vacinados, vermifugados e acompanhados por veterinários especializados.</p>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card-content text-center">
+              <h3>❤️ Muito amor</h3>
+              <p class="mt-2 card-text">Nosso objetivo é encontrar um lar cheio de carinho para cada cãozinho.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title text-center" style="margin:0 auto">Fale conosco</h2>
+        </div>
+        <div class="form-container">
+          <form id="contact-form">
+            <div class="form-group">
+              <label for="contact-name">Nome completo</label>
+              <input type="text" id="contact-name" name="name" placeholder="Seu nome completo" required>
+            </div>
+            <div class="form-group">
+              <label for="contact-email">E-mail</label>
+              <input type="email" id="contact-email" name="email" placeholder="seu@email.com" required>
+            </div>
+            <div class="form-group">
+              <label for="contact-phone">Telefone</label>
+              <input type="tel" id="contact-phone" name="phone" placeholder="(00) 00000-0000">
+            </div>
+            <div class="form-group">
+              <label for="contact-message">Mensagem</label>
+              <textarea id="contact-message" name="message" rows="5" placeholder="Como podemos ajudar?" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar mensagem</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4 id="footer-name">🐾 PETMEL ADOÇÕES</h4>
+          <p>Sistema de adoção de cães desenvolvido para conectar animais e famílias amorosas.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Links rápidos</h4>
+          <ul class="footer-links">
+            <li><a href="/">Início</a></li>
+            <li><a href="/caes">Cães disponíveis</a></li>
+            <li><a href="/local">Local</a></li>
+            <li><a href="/#contact">Contato</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Contato</h4>
+          <ul class="footer-links">
+            <li id="footer-email">📧 contato@petmel.com.br</li>
+            <li id="footer-phone">📱 (00) 00000-0000</li>
+            <li id="footer-address">📍 Rua exemplo, 123 - Cidade/UF</li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Redes sociais</h4>
+          <ul class="footer-links">
+            <li><a href="#" target="_blank">📘 Facebook</a></li>
+            <li><a href="#" target="_blank">📸 Instagram</a></li>
+            <li><a href="#" target="_blank">💬 WhatsApp</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 PETMEL ADOÇÕES. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script>
+    window.appReady.then(() => {
+      const form = document.getElementById('contact-form');
+      if (!form) return;
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = form.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.textContent = 'Enviando...';
+
+        try {
+          await apiCall('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name:    document.getElementById('contact-name').value.trim(),
+              email:   document.getElementById('contact-email').value.trim(),
+              phone:   document.getElementById('contact-phone').value.trim(),
+              message: document.getElementById('contact-message').value.trim()
+            })
+          });
+          showAlert('Mensagem enviada! Entraremos em contato em breve. 🐾');
+          form.reset();
+        } catch (err) {
+          showAlert(err.message || 'Erro ao enviar mensagem.', 'error');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Enviar mensagem';
+        }
+      });
+    });
+  </script>
 </body>
 </html>

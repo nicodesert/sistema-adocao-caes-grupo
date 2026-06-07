@@ -1,4 +1,4 @@
-﻿/* ============================================
+/* ============================================
    CSS Reset & Variáveis
    ============================================ */
 :root {
@@ -545,4 +545,72 @@ footer {
     .navbar-menu li { width: 100%; border-bottom: 1px solid #f0f0f0; }
     .navbar-menu li:last-child { border-bottom: none; }
     .navbar-link, .navbar-menu .btn { display: block; padding: 0.85rem 0; width: 100%; }
+}
+
+/* =============================================
+   BARRA DE BUSCA — página pública /caes
+   ============================================= */
+.search-bar {
+    margin-bottom: 1.5rem;
+}
+
+.search-input-wrap {
+    position: relative;
+    max-width: 520px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    pointer-events: none;
+}
+
+.search-input-wrap input {
+    width: 100%;
+    padding: 12px 40px 12px 42px;
+    border: 1.5px solid var(--gray-300);
+    border-radius: var(--border-radius-lg);
+    font-size: var(--font-size-base);
+    font-family: var(--font-primary);
+    color: var(--gray-800);
+    background: var(--white);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+}
+
+.search-input-wrap input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.12);
+}
+
+.search-input-wrap input::placeholder {
+    color: var(--gray-500);
+}
+
+.search-clear {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--gray-500);
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: color 0.15s;
+}
+
+.search-clear:hover {
+    color: var(--gray-800);
+}
+
+@media (max-width: 768px) {
+    .search-input-wrap {
+        max-width: 100%;
+    }
 }

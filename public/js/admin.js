@@ -4,20 +4,19 @@
 // ============================================
 
 window.appReady.then(() => {
-  // Verifica se é admin
   if (!window.currentUser || window.currentUser.role !== 'admin') {
     window.location.href = '/login';
     return;
   }
 
-  // Inicializa a página correta baseado nos elementos
-  if (document.getElementById('dashboard')) initDashboard();
-  if (document.getElementById('admin-dogs')) initAdminDogs();
-  if (document.getElementById('dog-form')) initDogForm();
-  if (document.getElementById('admin-clients')) initAdminClients();
-  if (document.getElementById('client-detail')) initClientDetail();
+  if (document.getElementById('dashboard'))       initDashboard();
+  if (document.getElementById('admin-dogs'))      initAdminDogs();
+  if (document.getElementById('dog-form'))        initDogForm();
+  if (document.getElementById('admin-clients'))   initAdminClients();
+  if (document.getElementById('client-detail'))   initClientDetail();
   if (document.getElementById('admin-adoptions')) initAdminAdoptions();
-  if (document.getElementById('admin-place')) initAdminPlace();
+  if (document.getElementById('admin-place'))     initAdminPlace();
+  if (document.getElementById('admin-messages'))  initAdminMessages();
 });
 
 // =============================================
@@ -25,7 +24,13 @@ window.appReady.then(() => {
 // =============================================
 async function initDashboard() {
   try {
-    const stats = await apiCall('/api/admin/dashboard');
+    const [stats, contacts] = await Promise.all([
+      apiCall('/api/admin/dashboard'),
+      apiCall('/api/contact')
+    ]);
+
+    const unread = contacts.filter(c => !c.read).length;
+
     const container = document.getElementById('dashboard');
     container.innerHTML = `
       <div class="stat-card stat-dogs">
@@ -48,7 +53,40 @@ async function initDashboard() {
         <div class="stat-number">${stats.approvedAdoptions}</div>
         <div class="stat-label">Adoções Aprovadas</div>
       </div>
+      <div class="stat-card" style="${unread > 0 ? 'border-left:4px solid #d97706' : ''}">
+        <div class="stat-number" style="color:#d97706">${unread}</div>
+        <div class="stat-label">Mensagens Novas</div>
+      </div>
     `;
+
+    // Prévia das mensagens não lidas
+    if (unread > 0) {
+      const preview = contacts.filter(c => !c.read).slice(0, 3);
+      const section = document.createElement('div');
+      section.style.cssText = 'margin-top:28px';
+      section.innerHTML = `
+        <div class="admin-page-header" style="margin-bottom:16px">
+          <h3 style="font-size:1rem;font-weight:700;color:#0f172a">📬 Mensagens não lidas</h3>
+          <a href="/admin/mensagens" class="btn btn-secondary btn-sm">Ver todas</a>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead><tr><th>Nome</th><th>E-mail</th><th>Mensagem</th><th>Data</th><th>Ação</th></tr></thead>
+            <tbody>
+              ${preview.map(c => `
+                <tr>
+                  <td><strong>${c.name}</strong></td>
+                  <td>${c.email}</td>
+                  <td style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.message}</td>
+                  <td>${new Date(c.created_at).toLocaleDateString('pt-BR')}</td>
+                  <td><button class="btn btn-primary btn-sm" onclick="markRead(${c.id}, this)">Marcar lida</button></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>`;
+      container.insertAdjacentElement('afterend', section);
+    }
   } catch (err) {
     showAlert('Erro ao carregar dashboard.', 'error');
   }
@@ -88,7 +126,6 @@ async function initAdminDogs() {
   }
 }
 
-// Excluir cão
 async function deleteDog(id) {
   if (!confirm('Tem certeza que deseja excluir este cão?')) return;
   try {
@@ -118,10 +155,7 @@ async function initDogForm() {
     submitBtn.disabled = true;
     submitBtn.textContent = 'Salvando...';
     try {
-      const res = await fetch(url, {
-        method: 'POST',
-        body: formData
-      });
+      const res = await fetch(url, { method: 'POST', body: formData });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       showAlert(data.message, 'success');
@@ -138,16 +172,14 @@ async function initDogForm() {
     document.getElementById('available-group').style.display = 'block';
     submitBtn.disabled = true;
     submitBtn.textContent = 'Carregando...';
-
     try {
       const dog = await apiCall('/api/admin/dogs/' + dogId);
-      document.getElementById('name').value = dog.name;
-      document.getElementById('age').value = dog.age;
-      document.getElementById('vaccines').value = dog.vaccines || '';
-      document.getElementById('condition').value = dog.condition || '';
+      document.getElementById('name').value        = dog.name;
+      document.getElementById('age').value         = dog.age;
+      document.getElementById('vaccines').value    = dog.vaccines || '';
+      document.getElementById('condition').value   = dog.condition || '';
       document.getElementById('description').value = dog.description || '';
-      document.getElementById('available').value = dog.available ? '1' : '0';
-
+      document.getElementById('available').value   = dog.available ? '1' : '0';
       if (dog.photo) {
         const preview = document.getElementById('photo-preview');
         preview.src = dog.photo;
@@ -156,7 +188,6 @@ async function initDogForm() {
     } catch (err) {
       showAlert('Erro ao carregar dados do cão.', 'error');
     }
-
     submitBtn.disabled = false;
     submitBtn.textContent = 'Salvar';
   }
@@ -195,7 +226,6 @@ async function initAdminClients() {
   }
 }
 
-// Excluir cliente
 async function deleteClient(id) {
   if (!confirm('Tem certeza que deseja excluir este cliente e suas adoções?')) return;
   try {
@@ -215,10 +245,7 @@ async function initClientDetail() {
   const clientId = params.get('id');
   const container = document.getElementById('client-detail');
 
-  if (!clientId) {
-    container.innerHTML = '<p>Cliente não encontrado.</p>';
-    return;
-  }
+  if (!clientId) { container.innerHTML = '<p>Cliente não encontrado.</p>'; return; }
 
   try {
     const data = await apiCall('/api/admin/clients/' + clientId);
@@ -226,7 +253,7 @@ async function initClientDetail() {
     const adoptions = data.adoptions;
 
     const statusLabel = {
-      pending: '<span class="badge badge-pending">Pendente</span>',
+      pending:  '<span class="badge badge-pending">Pendente</span>',
       approved: '<span class="badge badge-approved">Aprovada</span>',
       rejected: '<span class="badge badge-rejected">Rejeitada</span>'
     };
@@ -256,8 +283,7 @@ async function initClientDetail() {
         <p><strong>Endereço:</strong> ${client.address}</p>
         <p><strong>Cadastrado em:</strong> ${new Date(client.created_at).toLocaleDateString('pt-BR')}</p>
       </div>
-      ${adoptionsHtml}
-    `;
+      ${adoptionsHtml}`;
   } catch (err) {
     container.innerHTML = '<p>Erro ao carregar cliente.</p>';
   }
@@ -277,7 +303,7 @@ async function initAdminAdoptions() {
     }
 
     const statusLabel = {
-      pending: '<span class="badge badge-pending">Pendente</span>',
+      pending:  '<span class="badge badge-pending">Pendente</span>',
       approved: '<span class="badge badge-approved">Aprovada</span>',
       rejected: '<span class="badge badge-rejected">Rejeitada</span>'
     };
@@ -309,40 +335,137 @@ async function initAdminAdoptions() {
   }
 }
 
-// Filtrar adoções (sem recarregar a página)
 function filterAdoptions(filter) {
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.filter === filter);
   });
-
   document.querySelectorAll('.adoption-row').forEach(row => {
-    if (filter === 'all' || row.dataset.status === filter) {
-      row.style.display = '';
-    } else {
-      row.style.display = 'none';
-    }
+    row.style.display = (filter === 'all' || row.dataset.status === filter) ? '' : 'none';
   });
 }
 
-// Aprovar adoção
 async function approveAdoption(id) {
   if (!confirm('Aprovar esta adoção? O cão ficará indisponível.')) return;
   try {
     await apiCall('/api/admin/adoptions/' + id + '/approve', { method: 'POST' });
     showAlert('Adoção aprovada!', 'success');
     initAdminAdoptions();
-  } catch (err) {
-    showAlert(err.message, 'error');
-  }
+  } catch (err) { showAlert(err.message, 'error'); }
 }
 
-// Rejeitar adoção
 async function rejectAdoption(id) {
   if (!confirm('Rejeitar esta adoção?')) return;
   try {
     await apiCall('/api/admin/adoptions/' + id + '/reject', { method: 'POST' });
     showAlert('Adoção rejeitada.', 'success');
     initAdminAdoptions();
+  } catch (err) { showAlert(err.message, 'error'); }
+}
+
+// =============================================
+// MENSAGENS DE CONTATO
+// =============================================
+async function initAdminMessages() {
+  try {
+    const contacts = await apiCall('/api/contact');
+    renderMessages(contacts, 'all');
+  } catch (err) {
+    showAlert('Erro ao carregar mensagens.', 'error');
+  }
+}
+
+let _allMessages = [];
+
+async function initAdminMessages() {
+  try {
+    _allMessages = await apiCall('/api/contact');
+    renderMessages(_allMessages, 'all');
+  } catch (err) {
+    document.getElementById('admin-messages').innerHTML =
+      '<div class="empty-message"><span>📭</span><p>Erro ao carregar mensagens.</p></div>';
+  }
+}
+
+function filterMessages(filter) {
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.filter === filter);
+  });
+  renderMessages(_allMessages, filter);
+}
+
+function renderMessages(messages, filter) {
+  const container = document.getElementById('admin-messages');
+  const filtered = filter === 'all'   ? messages
+                 : filter === 'unread' ? messages.filter(m => !m.read)
+                 : messages.filter(m => m.read);
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="empty-message"><span>📭</span><p>Nenhuma mensagem${filter !== 'all' ? ' nesta categoria' : ''}.</p></div>`;
+    return;
+  }
+
+  container.innerHTML = '<table>' +
+    '<thead><tr><th>Status</th><th>Nome</th><th>E-mail</th><th>Telefone</th><th>Mensagem</th><th>Data</th><th>Ações</th></tr></thead><tbody>' +
+    filtered.map(c => `
+      <tr id="msg-row-${c.id}" style="${!c.read ? 'font-weight:600;background:#fffbeb' : ''}">
+        <td>${!c.read
+          ? '<span class="badge badge-pending">Nova</span>'
+          : '<span class="badge" style="background:#f1f5f9;color:#64748b">Lida</span>'}</td>
+        <td>${c.name}</td>
+        <td>${c.email}</td>
+        <td>${c.phone || '-'}</td>
+        <td style="max-width:280px">
+          <span id="msg-preview-${c.id}">${c.message.length > 60 ? c.message.slice(0,60) + '…' : c.message}</span>
+          ${c.message.length > 60 ? `<button onclick="toggleMessage(${c.id}, ${JSON.stringify(c.message).replace(/"/g,'&quot;')})" class="btn btn-secondary btn-sm" style="margin-left:6px;padding:2px 8px">Ver</button>` : ''}
+        </td>
+        <td style="white-space:nowrap">${new Date(c.created_at).toLocaleDateString('pt-BR')}</td>
+        <td style="white-space:nowrap">
+          ${!c.read ? `<button class="btn btn-primary btn-sm" onclick="markRead(${c.id}, this)">Marcar lida</button> ` : ''}
+          <button class="btn btn-danger btn-sm" onclick="deleteMessage(${c.id})">Excluir</button>
+        </td>
+      </tr>
+    `).join('') +
+    '</tbody></table>';
+}
+
+function toggleMessage(id, fullText) {
+  const span = document.getElementById('msg-preview-' + id);
+  const btn = span.nextElementSibling;
+  if (btn.textContent === 'Ver') {
+    span.textContent = fullText;
+    btn.textContent = 'Recolher';
+  } else {
+    span.textContent = fullText.slice(0, 60) + '…';
+    btn.textContent = 'Ver';
+  }
+}
+
+async function markRead(id, btn) {
+  try {
+    await apiCall('/api/contact/' + id + '/read', { method: 'POST' });
+    // Atualiza localmente sem recarregar tudo
+    const msg = _allMessages.find(m => m.id === id);
+    if (msg) msg.read = 1;
+    const row = document.getElementById('msg-row-' + id);
+    if (row) {
+      row.style.fontWeight = '';
+      row.style.background = '';
+      row.cells[0].innerHTML = '<span class="badge" style="background:#f1f5f9;color:#64748b">Lida</span>';
+      btn.remove();
+    }
+  } catch (err) {
+    showAlert('Erro ao marcar mensagem.', 'error');
+  }
+}
+
+async function deleteMessage(id) {
+  if (!confirm('Excluir esta mensagem?')) return;
+  try {
+    await apiCall('/api/contact/' + id + '/delete', { method: 'POST' });
+    _allMessages = _allMessages.filter(m => m.id !== id);
+    const row = document.getElementById('msg-row-' + id);
+    if (row) row.remove();
+    showAlert('Mensagem excluída.', 'success');
   } catch (err) {
     showAlert(err.message, 'error');
   }
@@ -363,121 +486,74 @@ async function initAdminPlace() {
       <div class="form-container mb-20">
         <h2 class="mb-20">Editar Informações</h2>
         <form id="place-form">
-          <div class="form-group">
-            <label for="place-name">Nome do Local:</label>
-            <input type="text" id="place-name" name="name" value="${place.name || ''}">
-          </div>
-          <div class="form-group">
-            <label for="place-address">Endereço:</label>
-            <input type="text" id="place-address" name="address" value="${place.address || ''}">
-          </div>
-          <div class="form-group">
-            <label for="place-phone">Telefone:</label>
-            <input type="text" id="place-phone" name="phone" value="${place.phone || ''}">
-          </div>
-          <div class="form-group">
-            <label for="place-email">Email:</label>
-            <input type="email" id="place-email" name="email" value="${place.email || ''}">
-          </div>
-          <div class="form-group">
-            <label for="place-description">Descrição:</label>
-            <textarea id="place-description" name="description">${place.description || ''}</textarea>
-          </div>
-          <div class="form-group">
-            <label for="place-facebook">Facebook (URL):</label>
-            <input type="text" id="place-facebook" name="facebook" value="${place.facebook || ''}">
-          </div>
-          <div class="form-group">
-            <label for="place-instagram">Instagram (URL):</label>
-            <input type="text" id="place-instagram" name="instagram" value="${place.instagram || ''}">
-          </div>
-          <div class="form-group">
-            <label for="place-whatsapp">WhatsApp (URL):</label>
-            <input type="text" id="place-whatsapp" name="whatsapp" value="${place.whatsapp || ''}">
-          </div>
+          <div class="form-group"><label>Nome do Local:</label><input type="text" id="place-name" value="${place.name || ''}"></div>
+          <div class="form-group"><label>Endereço:</label><input type="text" id="place-address" value="${place.address || ''}"></div>
+          <div class="form-group"><label>Telefone:</label><input type="text" id="place-phone" value="${place.phone || ''}"></div>
+          <div class="form-group"><label>Email:</label><input type="email" id="place-email" value="${place.email || ''}"></div>
+          <div class="form-group"><label>Descrição:</label><textarea id="place-description">${place.description || ''}</textarea></div>
+          <div class="form-group"><label>Facebook (URL):</label><input type="text" id="place-facebook" value="${place.facebook || ''}"></div>
+          <div class="form-group"><label>Instagram (URL):</label><input type="text" id="place-instagram" value="${place.instagram || ''}"></div>
+          <div class="form-group"><label>WhatsApp (URL):</label><input type="text" id="place-whatsapp" value="${place.whatsapp || ''}"></div>
           <button type="submit" class="btn btn-primary">Salvar Informações</button>
         </form>
       </div>
-
       <div class="form-container">
         <h2 class="mb-20">Fotos do Local</h2>
         <form id="place-photo-form" class="mb-20">
-          <div class="form-group">
-            <label for="place-photo">Adicionar Foto:</label>
-            <input type="file" id="place-photo" name="photo" accept="image/*">
-          </div>
-          <div class="form-group">
-            <label for="place-caption">Legenda (opcional):</label>
-            <input type="text" id="place-caption" name="caption">
-          </div>
+          <div class="form-group"><label>Adicionar Foto:</label><input type="file" id="place-photo" name="photo" accept="image/*"></div>
+          <div class="form-group"><label>Legenda (opcional):</label><input type="text" id="place-caption" name="caption"></div>
           <button type="submit" class="btn btn-success">Enviar Foto</button>
         </form>
-
-        ${photos.length > 0 ? `
-          <div class="photo-grid">
-            ${photos.map(p => `
+        ${photos.length > 0
+          ? `<div class="photo-grid">${photos.map(p => `
               <div class="photo-item">
                 <img src="${p.photo}" alt="${p.caption || ''}">
                 <button class="photo-delete" onclick="deletePlacePhoto(${p.id})" title="Excluir">&times;</button>
-              </div>
-            `).join('')}
-          </div>
-        ` : '<p class="text-center">Nenhuma foto adicionada.</p>'}
-      </div>
-    `;
+              </div>`).join('')}</div>`
+          : '<p class="text-center">Nenhuma foto adicionada.</p>'}
+      </div>`;
 
-    document.getElementById('place-form').addEventListener('submit', async function (e) {
+    document.getElementById('place-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const formData = {
-        name: document.getElementById('place-name').value,
-        address: document.getElementById('place-address').value,
-        phone: document.getElementById('place-phone').value,
-        email: document.getElementById('place-email').value,
-        description: document.getElementById('place-description').value,
-        facebook: document.getElementById('place-facebook').value,
-        instagram: document.getElementById('place-instagram').value,
-        whatsapp: document.getElementById('place-whatsapp').value
-      };
-
       try {
         const result = await apiCall('/api/admin/place', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
+          body: JSON.stringify({
+            name:        document.getElementById('place-name').value,
+            address:     document.getElementById('place-address').value,
+            phone:       document.getElementById('place-phone').value,
+            email:       document.getElementById('place-email').value,
+            description: document.getElementById('place-description').value,
+            facebook:    document.getElementById('place-facebook').value,
+            instagram:   document.getElementById('place-instagram').value,
+            whatsapp:    document.getElementById('place-whatsapp').value
+          })
         });
         showAlert(result.message, 'success');
-      } catch (err) {
-        showAlert(err.message, 'error');
-      }
+      } catch (err) { showAlert(err.message, 'error'); }
     });
 
-    document.getElementById('place-photo-form').addEventListener('submit', async function (e) {
+    document.getElementById('place-photo-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const formData = new FormData(this);
-
       try {
-        const res = await fetch('/api/admin/place/photo', { method: 'POST', body: formData });
+        const res = await fetch('/api/admin/place/photo', { method: 'POST', body: new FormData(e.target) });
         const result = await res.json();
         if (!res.ok) throw new Error(result.error);
         showAlert(result.message, 'success');
         initAdminPlace();
-      } catch (err) {
-        showAlert(err.message, 'error');
-      }
+      } catch (err) { showAlert(err.message, 'error'); }
     });
   } catch (err) {
     container.innerHTML = '<p>Erro ao carregar informações do local.</p>';
   }
 }
 
-// Excluir foto do local
 async function deletePlacePhoto(id) {
   if (!confirm('Excluir esta foto?')) return;
   try {
     await apiCall('/api/admin/place/photo/' + id + '/delete', { method: 'POST' });
     showAlert('Foto removida!', 'success');
     initAdminPlace();
-  } catch (err) {
-    showAlert(err.message, 'error');
-  }
+  } catch (err) { showAlert(err.message, 'error'); }
 }

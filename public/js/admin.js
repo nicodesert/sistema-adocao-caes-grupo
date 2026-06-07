@@ -365,16 +365,6 @@ async function rejectAdoption(id) {
 // =============================================
 // MENSAGENS DE CONTATO
 // =============================================
-async function initAdminMessages() {
-  try {
-    const contacts = await apiCall('/api/contact');
-    renderMessages(contacts, 'all');
-  } catch (err) {
-    showAlert('Erro ao carregar mensagens.', 'error');
-  }
-}
-
-let _allMessages = [];
 
 async function initAdminMessages() {
   try {

@@ -77,10 +77,6 @@ function wrapPostgres() {
   };
 }
 
-// Wrapper — facilita consultas ao banco
-// db.prepare('SQL').get(params) → retorna UMA linha
-// db.prepare('SQL').all(params) → retorna TODAS as linhas
-// db.prepare('SQL').run(params) → executa INSERT, UPDATE, DELETE
 function wrapDb(rawDb) {
   return {
     raw: rawDb,
@@ -126,13 +122,33 @@ function wrapDb(rawDb) {
   };
 }
 
-// Salva o banco no disco após cada alteração
 function save() {
   if (db && dbMode === 'sqlite') {
     const data = db.raw.export();
     fs.writeFileSync(dbPath, Buffer.from(data));
   }
 }
+
+// ── Tabela de contatos (compartilhada SQLite + Postgres) ──────────────────────
+const CREATE_CONTACTS_SQLITE = `CREATE TABLE IF NOT EXISTS contacts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT,
+  message TEXT NOT NULL,
+  read INTEGER NOT NULL DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)`;
+
+const CREATE_CONTACTS_PG = `CREATE TABLE IF NOT EXISTS contacts (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT,
+  message TEXT NOT NULL,
+  read INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)`;
 
 async function initializePostgresDatabase() {
   db = wrapPostgres();
@@ -200,6 +216,9 @@ async function initializePostgresDatabase() {
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )`);
 
+  // ── NOVA TABELA ───────────────────────────────────────────────
+  await db.exec(CREATE_CONTACTS_PG);
+
   const adminExists = await db.prepare('SELECT id FROM users WHERE role = ?').get('admin');
   if (!adminExists) {
     const hash = bcrypt.hashSync('admin123', 10);
@@ -226,14 +245,12 @@ async function initializeDatabase() {
   dbMode = 'sqlite';
   const SQL = await initSqlJs();
 
-  // Carrega banco existente ou cria um novo
   if (fs.existsSync(dbPath)) {
     db = wrapDb(new SQL.Database(fs.readFileSync(dbPath)));
   } else {
     db = wrapDb(new SQL.Database());
   }
 
-  // Tabela de usuários (clientes e admin)
   await db.exec(`CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
@@ -246,7 +263,6 @@ async function initializeDatabase() {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
-  // Tabela de cães
   await db.exec(`CREATE TABLE IF NOT EXISTS dogs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
@@ -259,7 +275,6 @@ async function initializeDatabase() {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
-  // Tabela de adoções (liga usuário a cão)
   await db.exec(`CREATE TABLE IF NOT EXISTS adoptions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
@@ -270,21 +285,18 @@ async function initializeDatabase() {
     FOREIGN KEY (dog_id) REFERENCES dogs(id)
   )`);
 
-  // Tabela de informações do local
   await db.exec(`CREATE TABLE IF NOT EXISTS place_info (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT, address TEXT, phone TEXT, email TEXT,
     description TEXT, facebook TEXT, instagram TEXT, whatsapp TEXT
   )`);
 
-  // Tabela de fotos do local
   await db.exec(`CREATE TABLE IF NOT EXISTS place_photos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     photo TEXT NOT NULL, caption TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
-  // Tabela de acolhedores
   await db.exec(`CREATE TABLE IF NOT EXISTS hosts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
@@ -296,6 +308,10 @@ async function initializeDatabase() {
     experience TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
+
+  // ── NOVA TABELA ───────────────────────────────────────────────
+  await db.exec(CREATE_CONTACTS_SQLITE);
+
   const adminExists = await db.prepare('SELECT id FROM users WHERE role = ?').get('admin');
   if (!adminExists) {
     const hash = bcrypt.hashSync('admin123', 10);
@@ -303,7 +319,6 @@ async function initializeDatabase() {
       .run('Administrador', 'admin@abrigo.com', '(00)00000-0000', '00000000000', 'Endereço do Abrigo', hash, 'admin');
   }
 
-  // Cria dados iniciais do local
   const placeExists = await db.prepare('SELECT id FROM place_info WHERE id = 1').get();
   if (!placeExists) {
     await db.prepare('INSERT INTO place_info (name,address,phone,email,description,facebook,instagram,whatsapp) VALUES (?,?,?,?,?,?,?,?)')
